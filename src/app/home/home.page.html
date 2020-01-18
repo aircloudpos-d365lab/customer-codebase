@@ -3,9 +3,13 @@
     <ion-title>
       {{APP_NAME}}
     </ion-title>
+    <ion-buttons slot='end'>
+      <ion-icon name='power' style="padding: 10px;" (click)="logOut()"></ion-icon>
+    </ion-buttons>
   </ion-toolbar>
 </ion-header>
 
 <ion-content>
-  
+  <ion-searchbar></ion-searchbar>
+  <p>This is homepage, it shall contain the menu and the search option</p>
 </ion-content>

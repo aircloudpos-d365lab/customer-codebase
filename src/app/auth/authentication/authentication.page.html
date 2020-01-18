@@ -1,0 +1,25 @@
+<ion-header>
+  <ion-toolbar>
+    <ion-title>authentication</ion-title>
+  </ion-toolbar>
+</ion-header>
+
+<ion-content>
+  <ion-card>
+    <ion-input placeholder='email'></ion-input>
+    <ion-input placeholder='password'></ion-input>
+    <div *ngIf='state == 1'>
+    <ion-input placeholder='repeat password'></ion-input>
+    <ion-input placeholder='first name'></ion-input>
+    <ion-input placeholder='last name'></ion-input>
+    </div>
+  </ion-card>
+  <ion-button (click)='signupOrLogin()'>{{(state == 1)?"Sign up":"Log in"}}</ion-button>
+  <p style="padding: 10px;" (click)='toggleState()'>{{toggleMessage}}</p>
+    <div>
+      <ion-button>Google</ion-button>
+    </div>
+    <div>
+      <ion-button>Facebook</ion-button>
+    </div>
+</ion-content>

@@ -25,7 +25,11 @@
 @import "~@ionic/angular/css/text-transformation.css";
 @import "~@ionic/angular/css/flex-utils.css";
 
+/* Google Icons fetched from server */
+@import url("https://fonts.googleapis.com/icon?family=Material+Icons");
+
 $primary: #3949AB;
+$gray: #707070;
 
 .primary-bg {
     background: $primary;
@@ -33,4 +37,119 @@ $primary: #3949AB;
 
 .primary {
     color: $primary;
+}
+
+.half-width {
+    width: 50%;
+}
+
+.shadow{
+    box-shadow: 0 10px 20px rgba(0, 0, 0, 0.014), 0 6px 6px rgba(0,0,0,0.21);
+}
+
+.card {
+    border-radius: 4px;
+}
+
+.m10{
+    margin: 10px;
+}
+
+.p10 {
+    padding: 10px;
+}
+
+.p20 {
+    padding: 20px;
+}
+
+.hfc {
+    display: flex;
+    flex-flow: row;
+    justify-content: center;
+    align-items: center;
+}
+.hfse {
+    display: flex;
+    flex-flow: row;
+    justify-content: space-evenly;
+    align-items: center;
+}
+.hfsa {
+    display: flex;
+    flex-flow: row;
+    justify-content: space-around;
+    align-items: center;
+}
+.hfsb {
+    display: flex;
+    flex-flow: row;
+    justify-content: space-between;
+    align-items: center;
+}
+
+.hffs {
+    display: flex;
+    flex-flow: row;
+    justify-content: flex-start;
+    align-items: center;
+}
+
+.vfsb {
+    display: flex;
+    flex-flow: column;
+    justify-content: space-between;
+    align-items: center;
+}
+
+// Colors
+.red {
+    color: #f44336;
+}
+
+.gray {
+    color: $gray;
+}
+
+.toolbar-icon {
+    color: #707070;
+    font-size: 1.4rem;
+    margin: 10px;
+}
+
+.ml10 {
+    margin-left: 10px;
+}
+
+.mr10 {
+    margin-right: 10px;
+}
+
+.mt20{
+    margin-top: 20px;
+}
+
+.mb20{
+    margin-bottom: 20px;
+}
+
+.fill-width {
+    width: 100%;
+}
+
+.fill-height {
+    height: 100%;
+}
+
+.fill-parent {
+    width: 100%;
+    height: 100%;
+}
+
+p {
+    color: $gray;
+}
+
+.text14 {
+    font-size: 1.4rem;
 }

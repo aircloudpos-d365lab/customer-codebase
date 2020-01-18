@@ -10,5 +10,13 @@ export class UserDataService {
   getAppName(): string {
     return 'Special 27';
   }
-  
+
+  getUsername(): string {
+    const user = localStorage.getItem('username');
+    return user;
+  }
+
+  logout() {
+    localStorage.setItem('username', null);
+  }
 }

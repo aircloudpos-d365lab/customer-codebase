@@ -1,1 +1,80 @@
+@import '../../global.scss';
 
+$rad: 8px;
+.menu-item-image {
+    border-radius: 10px;
+    height: 100px;
+    width: 100px;
+    overflow: hidden;
+    object-fit: cover;
+}
+
+.menu-item {
+    margin: 10px;
+}
+
+.item-counter {
+    border-radius: $rad;
+    border: 1px $primary solid;
+    p {
+        margin: 0px;
+    }
+}
+
+.item-quantity {
+    margin: 5px;
+    padding: 5px;
+}
+.solid-bg-left {
+    color: white;
+    border-radius: $rad 0 0 $rad;
+    background: $primary;
+    padding: 5px 10px;
+}
+.solid-bg-right {
+    color: white;
+    border-radius: 0 $rad $rad 0;
+    background: $primary;
+    padding: 5px 10px;
+}
+
+@keyframes FadeIn { 
+    0% {
+        opacity: 0;
+        max-height: 0px;
+        margin: 0px;
+        // padding: 0px;
+    }
+
+    100% {
+        opacity: 1;
+        max-height: 200px;
+        margin: 10px;
+        // padding: 10px;
+    }
+}
+@keyframes FadeOut {
+    0% {
+        opacity: 1;
+        max-height: 200px;
+        margin: 10px;
+        // padding: 10px;
+    }
+    100% {
+        opacity: 0;
+        max-height: 0px;
+        margin: 0px;
+        // padding: 0px;
+    }
+}
+
+.hidden {
+    animation: FadeOut 0.6s;
+    animation-fill-mode: forwards;
+    opacity: 0;
+}
+.reveal {
+    animation-delay: 0.6s;
+    animation: FadeIn 0.6s;
+    animation-fill-mode: forwards;
+}

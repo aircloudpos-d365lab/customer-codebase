@@ -16,6 +16,9 @@ export class UserDataService {
     return user;
   }
 
+  getRestaurantId(): string {
+    return 'R123456';
+  }
   logout() {
     localStorage.setItem('username', null);
   }

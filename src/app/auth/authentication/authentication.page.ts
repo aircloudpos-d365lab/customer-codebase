@@ -1,5 +1,4 @@
 import { Component, OnInit } from '@angular/core';
-import { stat } from 'fs';
 import { NavController } from '@ionic/angular';
 
 @Component({

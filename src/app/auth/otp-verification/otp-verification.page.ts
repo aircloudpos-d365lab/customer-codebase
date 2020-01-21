@@ -9,6 +9,7 @@ import { AlertController } from '@ionic/angular';
 })
 export class OtpVerificationPage implements OnInit {
 phone;
+email;
 otp;
 serverOtp;
 showOtpButton = false;

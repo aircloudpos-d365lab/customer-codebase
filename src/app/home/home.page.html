@@ -1,15 +1,69 @@
+ 
+<ion-menu menuClose side="start" content-id="content">
+    <ion-header >
+        <ion-toolbar>
+          <ion-title>Side Menu</ion-title>
+        </ion-toolbar>
+      </ion-header>
+      
+      <ion-content>
+        <ion-item>
+          <ion-menu-toggle (click)='logOut()'>
+              <ion-label>Log out (make it better) add icon or something</ion-label>
+          </ion-menu-toggle>
+        </ion-item>
+      </ion-content>
+  </ion-menu>
+
+
 <ion-header>
   <ion-toolbar>
     <ion-title>
       {{APP_NAME}}
     </ion-title>
+    <ion-buttons slot="start">
+      <ion-menu-button></ion-menu-button>
+    </ion-buttons>
     <ion-buttons slot='end'>
-      <ion-icon name='power' style="padding: 10px;" (click)="logOut()"></ion-icon>
+      <div class='hfc'>
+        <ion-label>Veg only</ion-label>
+        <ion-toggle (ionChange)='toggleVeg()'></ion-toggle>
+      </div>
     </ion-buttons>
   </ion-toolbar>
+
+  <ion-searchbar style="width: calc(100% - 20px);padding: 0px;" [ngClass]='(searchVisible)?"reveal":"hidden"'></ion-searchbar>
 </ion-header>
 
-<ion-content>
-  <ion-searchbar></ion-searchbar>
-  <p>This is homepage, it shall contain the menu and the search option</p>
+<ion-content id = 'content'>
+  <ion-fab vertical="bottom" horizontal="end" slot="fixed">
+    <ion-fab-button (click)="toggleSearch()">
+      <ion-icon name="search"></ion-icon>
+    </ion-fab-button>
+    <ion-fab-list side="top">
+      <!-- <ion-fab-button><ion-icon name="logo-vimeo"></ion-icon></ion-fab-button> -->
+    </ion-fab-list>
+  </ion-fab>
+  
+  <div style='margin-bottom: 40px;' *ngFor='let c of categories'>
+    <p class='m10' style="font-size: 1.6rem;">{{c}}</p>
+    <div class="menu-item" *ngFor='let item of displayMenu[c]'>
+      <div class='hfsb'>
+
+        <div style="align-items: flex-start;" class='hffs'>
+          <img class='menu-item-image' src='{{item.restaurantMenu.restaurantMenuPhoto}}'>
+          <div class='m10'>
+            <p class="black">{{item.restaurantMenu.restaurantMenuName}}</p>
+            <p>₹{{item.restaurantMenu.restaurantMenuFinalPrice}}</p>
+          </div> 
+        </div>
+
+        <div class="item-counter hfc">
+          <p class='solid-bg-left'>-</p>
+          <p class='item-quantity'>1</p>
+          <p class='solid-bg-right'>+</p>
+        </div>
+      </div>
+    </div>
+  </div>
 </ion-content>

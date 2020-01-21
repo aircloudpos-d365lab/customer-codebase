@@ -3,7 +3,7 @@
     <ion-buttons slot="start">
       <ion-back-button></ion-back-button>
     </ion-buttons>
-    <ion-title>Verify your phone</ion-title>
+    <ion-title>Verify your email</ion-title>
   </ion-toolbar>
 </ion-header>
 
@@ -14,8 +14,8 @@
           <div class='card shadow m10 p20'>
             <div *ngIf='!phoneset'>
               <div class='hffs'>
-                <i class="gray material-icons">call</i>
-                <p class="ml10 text14">Enter your phone no.</p>
+                <i class="gray material-icons">mail</i>
+                <p class="ml10 text14">{{email}}</p>
               </div>
               <ion-item class="mt20">
                 <ion-input type="number" [(ngModel)]='phone' placeholder='phone no.' (ionChange)='phoneChanged()'></ion-input>

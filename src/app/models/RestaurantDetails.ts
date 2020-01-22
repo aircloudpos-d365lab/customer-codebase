@@ -28,6 +28,7 @@ updatedAt: string;
 export interface MenuList {
 restaurantMenu: RestaurantMenu;
 restaurantMenuCustomizationList: RestaurantMenuCustomizationList[];
+count: number;
 }
 
 export interface RestaurantPaymentOptionsList {

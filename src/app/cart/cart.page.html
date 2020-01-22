@@ -1,0 +1,42 @@
+<ion-header>
+  <ion-toolbar>
+    <ion-buttons slot="start">
+      <ion-back-button></ion-back-button>
+    </ion-buttons>
+    <ion-title>My Cart</ion-title>
+  </ion-toolbar>
+</ion-header>
+
+<ion-content>
+  <div class="menu-item" *ngFor='let item of selectedItems'>
+    <div class='hfsb'>
+
+      <div style="align-items: flex-start;" class='hffs'>
+        <img class='menu-item-image' src='{{item.restaurantMenu.restaurantMenuPhoto}}'>
+        <div class='m10'>
+          <p class="black">{{item.restaurantMenu.restaurantMenuName}}</p>
+          <p>₹{{item.restaurantMenu.restaurantMenuFinalPrice}}</p>
+        </div> 
+      </div>
+
+      <div class="item-counter hfc">
+        <p class='solid-bg-left' (click)="changeItemCount(item, -1)">-</p>
+        <p class='item-quantity'>{{item.count}}</p>
+        <p class='solid-bg-right' (click)="changeItemCount(item, 1)">+</p>
+      </div>
+    </div>
+  </div>
+  <div>
+    <div class="hr"></div>
+    <div class='hfsb'>
+      <p class="medium-text">No of items</p>
+      <p class="medium-text">{{totalCount}}</p>
+    </div>
+    <div class='hfsb'>
+      <p class="big-text">Total price</p>
+      <p class="big-text">{{price}}</p>
+    </div>
+    <div class="hr"></div>
+  </div>
+  <ion-button style="width: 100%;">Place Order</ion-button>
+</ion-content>

@@ -5,11 +5,13 @@ import { UserDataService } from './user-data.service';
   providedIn: 'root'
 })
 export class RestDataService {
+RID = 'R123456';
 BASEURL = 'http://ec2-13-127-146-229.ap-south-1.compute.amazonaws.com:8082/api/';
-  constructor(public http: HttpClient, private data: UserDataService) { }
+  constructor(public http: HttpClient) { }
 
   getRestaurantDetails() {
-    return this.get('restaurant-details/?restaurant_tenant_id=' + this.data.getRestaurantId());
+    // do you need branch id?
+    return this.get('restaurant-details/?restaurant_tenant_id=' + this.RID);
   }
   get(url) {
     return this.http.get(this.BASEURL + url);

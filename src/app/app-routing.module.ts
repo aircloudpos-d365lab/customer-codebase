@@ -12,6 +12,10 @@ const routes: Routes = [
     path: 'otp-verification',
     loadChildren: () => import('./auth/otp-verification/otp-verification.module').then( m => m.OtpVerificationPageModule)
   },
+  {
+    path: 'cart',
+    loadChildren: () => import('./cart/cart.module').then( m => m.CartPageModule)
+  },
 ];
 
 @NgModule({

@@ -1,6 +1,7 @@
 @import '../../global.scss';
 
 $rad: 8px;
+$rad-small: 6px;
 .menu-item-image {
     border-radius: 10px;
     height: 100px;
@@ -27,13 +28,13 @@ $rad: 8px;
 }
 .solid-bg-left {
     color: white;
-    border-radius: $rad 0 0 $rad;
+    border-radius: $rad-small 0 0 $rad-small;
     background: $primary;
     padding: 5px 10px;
 }
 .solid-bg-right {
     color: white;
-    border-radius: 0 $rad $rad 0;
+    border-radius: 0 $rad-small $rad-small 0;
     background: $primary;
     padding: 5px 10px;
 }
@@ -76,5 +77,47 @@ $rad: 8px;
 .reveal {
     animation-delay: 0.6s;
     animation: FadeIn 0.6s;
+    animation-fill-mode: forwards;
+}
+
+
+@keyframes FadeIn-cart { 
+    0% {
+        opacity: 0;
+        max-height: 0px;
+        // margin: 0px;
+        // padding: 0px;
+    }
+
+    100% {
+        opacity: 1;
+        max-height: 200px;
+        // margin: 10px;
+        // padding: 10px;
+    }
+}
+@keyframes FadeOut-cart {
+    0% {
+        opacity: 1;
+        max-height: 200px;
+        // margin: 10px;
+        // padding: 10px;
+    }
+    100% {
+        opacity: 0;
+        max-height: 0px;
+        // margin: 0px;
+        // padding: 0px;
+    }
+}
+
+.hidden-cart {
+    animation: FadeOut-cart 0.6s;
+    animation-fill-mode: forwards;
+    opacity: 0;
+}
+.reveal-cart {
+    animation-delay: 0.6s;
+    animation: FadeIn-cart 0.6s;
     animation-fill-mode: forwards;
 }

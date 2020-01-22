@@ -2,16 +2,22 @@
 <ion-menu menuClose side="start" content-id="content">
     <ion-header >
         <ion-toolbar>
-          <ion-title>Side Menu</ion-title>
+          <p style="font-size: 1.4rem; margin: 10px;">{{APP_NAME}}</p>
+          <p style="margin: 10px;">{{BRANCH}}</p>
         </ion-toolbar>
       </ion-header>
       
       <ion-content>
-        <ion-item>
-          <ion-menu-toggle (click)='logOut()'>
-              <ion-label>Log out (make it better) add icon or something</ion-label>
-          </ion-menu-toggle>
-        </ion-item>
+          <ion-item>
+            <ion-menu-toggle (click)='presentAlertRadio()'>
+                <ion-label>Change branch</ion-label>
+            </ion-menu-toggle>
+          </ion-item>
+          <ion-item>
+            <ion-menu-toggle (click)='logOut()'>
+                <ion-label>Log out</ion-label>
+            </ion-menu-toggle>
+          </ion-item>
       </ion-content>
   </ion-menu>
 
@@ -33,6 +39,9 @@
   </ion-toolbar>
 
   <ion-searchbar style="width: calc(100% - 20px);padding: 0px;" [ngClass]='(searchVisible)?"reveal":"hidden"'></ion-searchbar>
+  <div (click)="goToCart()" [ngClass]='(price>0)?"reveal-cart":"hidden-cart"' class='primary-bg'>
+    <p class="p10" style="margin: 0px;color: white;">Items added worth ₹{{price}}. Go to cart</p>
+  </div>
 </ion-header>
 
 <ion-content id = 'content'>
@@ -46,22 +55,24 @@
   </ion-fab>
   
   <div style='margin-bottom: 40px;' *ngFor='let c of categories'>
-    <p class='m10' style="font-size: 1.6rem;">{{c}}</p>
-    <div class="menu-item" *ngFor='let item of displayMenu[c]'>
-      <div class='hfsb'>
-
-        <div style="align-items: flex-start;" class='hffs'>
-          <img class='menu-item-image' src='{{item.restaurantMenu.restaurantMenuPhoto}}'>
-          <div class='m10'>
-            <p class="black">{{item.restaurantMenu.restaurantMenuName}}</p>
-            <p>₹{{item.restaurantMenu.restaurantMenuFinalPrice}}</p>
-          </div> 
-        </div>
-
-        <div class="item-counter hfc">
-          <p class='solid-bg-left'>-</p>
-          <p class='item-quantity'>1</p>
-          <p class='solid-bg-right'>+</p>
+    <div *ngIf='displayMenu[c] != null'>
+      <p class='m10' style="font-size: 1.6rem;">{{c}}</p>
+      <div class="menu-item" *ngFor='let item of displayMenu[c]'>
+        <div class='hfsb'>
+  
+          <div style="align-items: flex-start;" class='hffs'>
+            <img class='menu-item-image' src='{{item.restaurantMenu.restaurantMenuPhoto}}'>
+            <div class='m10'>
+              <p class="black">{{item.restaurantMenu.restaurantMenuName}}</p>
+              <p>₹{{item.restaurantMenu.restaurantMenuFinalPrice}}</p>
+            </div> 
+          </div>
+  
+          <div class="item-counter hfc">
+            <p class='solid-bg-left' (click)="changeItemCount(item, -1)">-</p>
+            <p class='item-quantity'>{{item.count}}</p>
+            <p class='solid-bg-right' (click)="changeItemCount(item, 1)">+</p>
+          </div>
         </div>
       </div>
     </div>

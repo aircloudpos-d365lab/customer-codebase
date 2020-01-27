@@ -1,6 +1,6 @@
 import { Component, OnInit } from '@angular/core';
 import { UserDataService } from '../services/user-data.service';
-import { NavController, AlertController } from '@ionic/angular';
+import { NavController, AlertController, Platform } from '@ionic/angular';
 import { RestDataService } from '../services/rest-data.service';
 import { RestaurantDetailsResponse, MenuList } from '../models/RestaurantDetails';
 @Component({
@@ -9,6 +9,7 @@ import { RestaurantDetailsResponse, MenuList } from '../models/RestaurantDetails
   styleUrls: ['home.page.scss'],
 })
 export class HomePage implements OnInit {
+subscription;
 price = 0;
 selectedItems: MenuList[] = [];
 APP_NAME;
@@ -23,7 +24,8 @@ originalMenu;
   constructor(public data: UserDataService,
               private navCtrl: NavController,
               private restServ: RestDataService,
-              private alertController: AlertController) {}
+              private alertController: AlertController,
+              private platform: Platform) {}
 
   ngOnInit(): void {
     // Called after the constructor, initializing input properties, and the first call to ngOnChanges.
@@ -68,7 +70,7 @@ originalMenu;
 
 
   async presentAlertRadio() {
-    let data = [];
+    const data = [];
     const branches = this.data.getBranches();
     const curr = this.data.getSelectedBranch();
 
@@ -92,11 +94,11 @@ originalMenu;
           }
         }, {
           text: 'Ok',
-          handler: (data) => {
-            console.log(data);
-            if (data !== curr) {
-              this.data.setSelectedBranch(data);
-              this.BRANCH = data;
+          handler: (resData) => {
+            console.log(resData);
+            if (resData !== curr) {
+              this.data.setSelectedBranch(resData);
+              this.BRANCH = resData;
               this.ngOnInit();
             }
           }
@@ -185,6 +187,18 @@ originalMenu;
       }
     });
   }
+
+  ionViewDidEnter() {
+    this.subscription = this.platform.backButton.subscribe(() => {
+        const app = 'app';
+        navigator[app].exitApp();
+    });
+  }
+
+  ionViewWillLeave() {
+    this.subscription.unsubscribe();
+  }
+
   logOut() {
     this.data.logout();
     this.navCtrl.navigateRoot('authentication');

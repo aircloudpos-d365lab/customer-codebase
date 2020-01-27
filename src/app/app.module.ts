@@ -10,6 +10,7 @@ import { AppComponent } from './app.component';
 import { AppRoutingModule } from './app-routing.module';
 import { UserDataService } from './services/user-data.service';
 import { HttpClientModule } from '@angular/common/http';
+import { GooglePlus } from '@ionic-native/google-plus/ngx';
 @NgModule({
   declarations: [AppComponent],
   entryComponents: [],
@@ -23,6 +24,7 @@ import { HttpClientModule } from '@angular/common/http';
     UserDataService,
     StatusBar,
     SplashScreen,
+    GooglePlus,
     { provide: RouteReuseStrategy, useClass: IonicRouteStrategy }
   ],
   bootstrap: [AppComponent]

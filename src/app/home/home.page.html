@@ -38,7 +38,7 @@
     </ion-buttons>
   </ion-toolbar>
 
-  <ion-searchbar style="width: calc(100% - 20px);padding: 0px;" [ngClass]='(searchVisible)?"reveal":"hidden"'></ion-searchbar>
+  <ion-searchbar style="width: calc(100% - 20px);padding: 0px;" [ngClass]='(searchVisible)?"reveal":"hidden"' [(value)]='searchVal' (ionChange)='searchMenu($event)' debounce="500"></ion-searchbar>
   <div (click)="goToCart()" [ngClass]='(price>0)?"reveal-cart":"hidden-cart"' class='primary-bg'>
     <p class="p10" style="margin: 0px;color: white;">Items added worth ₹{{price}}. Go to cart</p>
   </div>
@@ -46,7 +46,7 @@
 
 <ion-content id = 'content'>
   <ion-fab vertical="bottom" horizontal="end" slot="fixed">
-    <ion-fab-button (click)="toggleSearch()">
+    <ion-fab-button  (click)="toggleSearch()">
       <ion-icon name="search"></ion-icon>
     </ion-fab-button>
     <ion-fab-list side="top">

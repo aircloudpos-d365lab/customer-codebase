@@ -28,7 +28,7 @@ export class AppComponent {
       this.splashScreen.hide();
     });
 
-    const username = this.data.getUsername();
+    const username = this.data.getUser();
     if (!username) {
       this.router.navigateRoot('authentication');
     }

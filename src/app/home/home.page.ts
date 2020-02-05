@@ -21,6 +21,10 @@ searchVisible = false;
 veg = false;
 vegMenu: any = {};
 originalMenu;
+originalCategories;
+searchVal; // used in html
+searchItemText = 'search results';
+
   constructor(public data: UserDataService,
               private navCtrl: NavController,
               private restServ: RestDataService,
@@ -63,11 +67,56 @@ originalMenu;
       });
 
       this.categories = Object.keys(this.displayMenu);
+      this.originalCategories = this.categories;
       console.log(this.displayMenu);
       this.originalMenu = this.displayMenu;
     });
   }
 
+  async searchMenu($event) {
+    const searchKey = $event.detail.value;
+
+    if (searchKey === '') {
+      this.categories = this.originalCategories;
+      this.refreshMenu(false);
+      return;
+    }
+
+    const response: any = await this.restServ.getMenuSearch(searchKey);
+
+    console.log(response);
+    const foodToDisplay = {};
+    response.forEach(element => {
+      const elem: any = element;
+      let res: string = elem;
+
+      res = res.split('/')[1];
+      foodToDisplay[res] = 1;
+    });
+
+    console.log(this.displayMenu);
+    this.filterMenu(foodToDisplay);
+  }
+
+  filterMenu(food) {
+
+    this.displayMenu = this.originalMenu;
+    const results = [];
+
+    this.categories.forEach(element => {
+      if (this.displayMenu[element]) {
+        this.displayMenu[element].forEach(items => {
+          if (food[items.restaurantMenu.restaurantMenuId]) {
+            results.push(items);
+          }
+        });
+      }
+    });
+
+    this.displayMenu[this.searchItemText] = results;
+    this.categories = [this.searchItemText];
+    console.log(this.displayMenu);
+  }
 
   async presentAlertRadio() {
     const data = [];
@@ -160,32 +209,53 @@ originalMenu;
   }
   toggleSearch() {
     this.searchVisible = !this.searchVisible;
+    if (!this.searchVisible) {
+      this.categories = this.originalCategories;
+      this.refreshMenu(false);
+    } else {
+      this.searchVal = '';
+    }
   }
 
   toggleVeg() {
     this.veg = !this.veg;
-    this.refreshMenu();
+    this.refreshMenu(true);
   }
 
-  refreshMenu() {
+  refreshMenu(resetCount: boolean) {
     // do something
+    const currentMenu = this.displayMenu;
+
     if (this.veg) {
       this.displayMenu = this.vegMenu;
     } else {
       this.displayMenu = this.originalMenu;
     }
-    this.selectedItems = [];
+    if (resetCount) {
+      this.selectedItems = [];
+    }
     this.price = 0;
-    console.log('is veg only? ' + this.veg);
-    console.log(this.displayMenu);
 
     this.categories.forEach(element => {
       if (this.displayMenu[element]) {
         this.displayMenu[element].forEach(items => {
-          items.count = 0;
+
+          if (resetCount) {
+            items.count = 0;
+            return;
+          }
+
+          if (currentMenu[this.searchItemText]) {
+            currentMenu[this.searchItemText].forEach(elem => {
+              if (elem.restaurantMenu.restaurantMenuId === items.restaurantMenu.restaurantMenuId) {
+                items.count = elem.count;
+              }
+            });
+          }
         });
       }
     });
+    console.log(this.displayMenu);
   }
 
   ionViewDidEnter() {

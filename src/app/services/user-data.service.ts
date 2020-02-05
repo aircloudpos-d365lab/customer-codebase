@@ -12,6 +12,14 @@ branches = ['branch one', 'branch two'];
     // call some api and fetch relevant data and keep them here
   }
 
+  setUser(user: {username: string, token: string}) {
+    localStorage.setItem('user', JSON.stringify(user));
+  }
+
+  getUser(): {username: string, token: string} {
+    return JSON.parse(localStorage.getItem('user'));
+  }
+
   getSelectedBranch(): string {
     const b = localStorage.getItem('currentBranch');
     if (b) {
@@ -31,11 +39,6 @@ branches = ['branch one', 'branch two'];
 
   getAppName(): string {
     return 'Special 27';
-  }
-
-  getUsername(): string {
-    const user = localStorage.getItem('username');
-    return user;
   }
 
   getRestaurantId(): string {

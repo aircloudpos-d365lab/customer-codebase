@@ -8,20 +8,25 @@
         </div>
         <div padding>
           <ion-item>
-            <ion-input placeholder='email'></ion-input>
+            <ion-label position='floating'>email<span style="color: red;">*</span></ion-label>
+            <ion-input [(ngModel)]='email' type='email'></ion-input>
           </ion-item>
           <ion-item>
-            <ion-input placeholder='password'></ion-input>
+            <ion-label position='floating'>password<span style="color: red;">*</span></ion-label>
+            <ion-input [(ngModel)]='password' type='password'></ion-input>
           </ion-item>
           <div *ngIf='state == 1'>
             <ion-item>
-              <ion-input placeholder='repeat password'></ion-input>
+                <ion-label position='floating'>repeat password<span style="color: red;">*</span></ion-label>
+              <ion-input [(ngModel)]='repass' type='password'></ion-input>
             </ion-item>
             <ion-item>
-              <ion-input placeholder='first name'></ion-input>
+              <ion-label position='floating'>enter your name<span style="color: red;">*</span></ion-label>
+              <ion-input [(ngModel)]='name'></ion-input>
             </ion-item>
             <ion-item>
-              <ion-input placeholder='last name'></ion-input>
+              <ion-label position='floating'>phone no<span style="color: red;">*</span></ion-label>
+              <ion-input type='number' [(ngModel)]='phone'></ion-input>
             </ion-item>
           </div>
           <div text-center>
@@ -42,12 +47,12 @@
                       alt="" width="16px" height="16px">&nbsp;Sign in with Google
                   </ion-button>
                 </ion-col>
-                <ion-col>
+                <!-- <ion-col>
                   <ion-button style="background-color: #1877F2;">
                     <ion-icon name="logo-facebook" style="color:white;"></ion-icon>&nbsp;Continue
                     with FaceBook
                   </ion-button>
-                </ion-col>
+                </ion-col> -->
               </ion-row>
             </ion-grid>
           </div>

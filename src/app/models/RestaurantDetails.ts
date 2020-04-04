@@ -29,6 +29,7 @@ export interface MenuList {
 restaurantMenu: RestaurantMenu;
 restaurantMenuCustomizationList: RestaurantMenuCustomizationList[];
 count: number;
+customisation: string;
 }
 
 export interface RestaurantPaymentOptionsList {

@@ -3,6 +3,9 @@ import { UserDataService } from '../services/user-data.service';
 import { NavController, AlertController, Platform } from '@ionic/angular';
 import { RestDataService } from '../services/rest-data.service';
 import { RestaurantDetailsResponse, MenuList } from '../models/RestaurantDetails';
+import { OrderResponse } from '../models/OrderDetails';
+
+
 @Component({
   selector: 'app-home',
   templateUrl: 'home.page.html',
@@ -24,6 +27,7 @@ originalMenu;
 originalCategories;
 searchVal; // used in html
 searchItemText = 'search results';
+showCurrentOrderBadge = false;
 
   constructor(public data: UserDataService,
               private navCtrl: NavController,
@@ -34,13 +38,17 @@ searchItemText = 'search results';
   ngOnInit(): void {
     // Called after the constructor, initializing input properties, and the first call to ngOnChanges.
     // Add 'implements OnInit' to the class.
+
     this.price = 0;
     this.selectedItems = [];
     this.searchVisible = false;
     this.veg = false;
 
     this.APP_NAME = this.data.getAppName();
-    this.BRANCH = this.data.getSelectedBranch();
+    this.setBranchNameForId(this.data.getSelectedBranchId());
+    
+    this.displayMenu = [];
+    this.vegMenu = [];
     this.restServ.getRestaurantDetails().subscribe(res => {
       console.log(res);
       const result: any = res;
@@ -49,6 +57,7 @@ searchItemText = 'search results';
 
       menu.forEach(item => {
         if (!this.displayMenu[item.restaurantMenu.restaurantMenuType]) {
+          console.log('pushing ' + item.restaurantMenu.restaurantMenuType);
           this.displayMenu[item.restaurantMenu.restaurantMenuType] = [];
         }
 
@@ -73,6 +82,40 @@ searchItemText = 'search results';
     });
   }
 
+  async setBranchNameForId(id) {
+    if (!id) {
+      this.BRANCH = 'Select a branch';
+      return;
+    }
+    try {
+      const res: any = await this.restServ.getBranches();
+      res.restaurantTenantList.forEach(element => {
+        if (element.restaurantOutletTenantId === id) {
+          this.BRANCH = element.restaurantOutletName;
+        }
+      });
+    } catch (err) {
+      this.BRANCH = 'Select a branch';
+    }
+  }
+
+  clearCart() {
+    this.selectedItems = [];
+    this.price = 0;
+    this.categories.forEach(element => {
+      if (this.displayMenu[element]) {
+        this.displayMenu[element].forEach(items => {
+          items.count = 0;
+        });
+      }
+    });
+    console.log('cart cleared');
+  }
+
+  printUserData() {
+    console.log(this.data.getUser());
+  }
+
   async searchMenu($event) {
     const searchKey = $event.detail.value;
 
@@ -94,9 +137,15 @@ searchItemText = 'search results';
       foodToDisplay[res] = 1;
     });
 
+    console.log(foodToDisplay);
     console.log(this.displayMenu);
     this.filterMenu(foodToDisplay);
   }
+
+  goToOrdersHistory() {
+    this.navCtrl.navigateForward('/history');
+  }
+
 
   filterMenu(food) {
 
@@ -106,6 +155,7 @@ searchItemText = 'search results';
     this.categories.forEach(element => {
       if (this.displayMenu[element]) {
         this.displayMenu[element].forEach(items => {
+          console.log(items.restaurantMenu.restaurantMenuId);
           if (food[items.restaurantMenu.restaurantMenuId]) {
             results.push(items);
           }
@@ -120,42 +170,52 @@ searchItemText = 'search results';
 
   async presentAlertRadio() {
     const data = [];
-    const branches = this.data.getBranches();
-    const curr = this.data.getSelectedBranch();
-
-    branches.forEach(element => {
-      const obj = {name: element, type: 'radio', value: element, label: element, checked: false};
-      if (element === curr) {
-        obj.checked = true;
-      }
-      data.push(obj);
-    });
-    const alert = await this.alertController.create({
-      header: 'Radio',
-      inputs: data,
-      buttons: [
-        {
-          text: 'Cancel',
-          role: 'cancel',
-          cssClass: 'secondary',
-          handler: () => {
-            console.log('Confirm Cancel');
-          }
-        }, {
-          text: 'Ok',
-          handler: (resData) => {
-            console.log(resData);
-            if (resData !== curr) {
-              this.data.setSelectedBranch(resData);
-              this.BRANCH = resData;
-              this.ngOnInit();
+    try {
+      const branches: any  = await this.restServ.getBranches();
+      const curr = this.data.getSelectedBranchId();
+      console.log(branches);
+      branches.restaurantTenantList.forEach(element => {
+        const obj = {
+          name: element.restaurantOutletName,
+          type: 'radio',
+          value: element.restaurantOutletTenantId,
+          label: element.restaurantOutletName,
+          checked: false
+        };
+        if (element.restaurantOutletTenantId === curr) {
+          obj.checked = true;
+        }
+        data.push(obj);
+      });
+      const alert = await this.alertController.create({
+        header: 'Select Branch',
+        inputs: data,
+        buttons: [
+          {
+            text: 'Cancel',
+            role: 'cancel',
+            cssClass: 'secondary',
+            handler: () => {
+              console.log('Confirm Cancel');
+            }
+          }, {
+            text: 'Ok',
+            handler: (resData) => {
+              console.log(resData);
+              if (resData !== curr) {
+                this.data.setSelectedBranchId(resData);
+                this.BRANCH = resData;
+                this.ngOnInit();
+              }
             }
           }
-        }
-      ]
-    });
+        ]
+      });
 
-    await alert.present();
+      await alert.present();
+    } catch (err) {
+      console.log(err);
+    }
   }
 
   changeItemCount(item: MenuList, count: number) {
@@ -163,7 +223,7 @@ searchItemText = 'search results';
       return;
     }
     item.count += count;
-    this.price += item.restaurantMenu.restaurantMenuFinalPrice * count;
+    this.price += item.restaurantMenu.restaurantMenuPrice * count;
   }
 
 
@@ -187,12 +247,15 @@ searchItemText = 'search results';
     this.price = 0;
     if (this.selectedItems) {
       this.selectedItems.forEach(element => {
-        this.price += element.count * element.restaurantMenu.restaurantMenuFinalPrice;
+        this.price += element.count * element.restaurantMenu.restaurantMenuPrice;
       });
     }
   }
 
   goToCart() {
+    if (this.price === 0) {
+      return;
+    }
     this.selectedItems = [];
     this.categories.forEach(element => {
       if (this.displayMenu[element]) {
@@ -233,8 +296,8 @@ searchItemText = 'search results';
     }
     if (resetCount) {
       this.selectedItems = [];
+      this.price = 0;
     }
-    this.price = 0;
 
     this.categories.forEach(element => {
       if (this.displayMenu[element]) {
@@ -262,6 +325,16 @@ searchItemText = 'search results';
     this.subscription = this.platform.backButton.subscribe(() => {
         const app = 'app';
         navigator[app].exitApp();
+    });
+
+    this.restServ.getCurrentOrderList().then(res => {
+      const response: any = res;
+      const data: OrderResponse = response;
+      if (data.restaurantOrderOutputPayloadList.length > 0) {
+        this.showCurrentOrderBadge = true;
+      }
+    }).catch(err => {
+      console.log(err);
     });
   }
 

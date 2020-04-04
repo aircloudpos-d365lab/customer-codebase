@@ -1,6 +1,6 @@
 import { Component, OnInit } from '@angular/core';
 import { RestDataService } from 'src/app/services/rest-data.service';
-import { AlertController } from '@ionic/angular';
+import { AlertController, NavController } from '@ionic/angular';
 
 @Component({
   selector: 'app-otp-verification',
@@ -9,68 +9,39 @@ import { AlertController } from '@ionic/angular';
 })
 export class OtpVerificationPage implements OnInit {
 phone;
-email;
-otp;
-serverOtp;
-showOtpButton = false;
-alertObj;
-errormessage;
-enableNext = false;
-phoneset;
+password = '';
+repass;
+reg = new RegExp(/^(\+91[\-\s]?)?[0]?(91)?[6789]\d{9}$/);
+
   constructor(public restServ: RestDataService,
-              public alertCtrl: AlertController) { }
+              public alertCtrl: AlertController,
+              public navCtrl: NavController) { }
 
-  phoneChanged() {
-    const reg = new RegExp(/^(\+91[\-\s]?)?[0]?(91)?[6789]\d{9}$/);
-    if (reg.test(this.phone)) {
-      this.showOtpButton = true;
-    } else {
-      this.showOtpButton = false;
+
+  async resetPassword() {
+    if (!this.reg.test(this.phone)) {
+      alert('Please enter a valid phone number');
+      return;
     }
-  }
 
-  otpChanged() {
-    if (this.otp + '' === this.serverOtp + '') {
-      console.log('otp matched!');
-      alert('OTP verification successful!\nClick next to continue');
-      this.enableNext = true;
-    } else {
-      // console.log('otp didnt match yet');
-      // console.log(this.otp + ' ' + this.serverOtp);
+    if (this.password === '') {
+      alert('Please enter a new password you want to set');
+      return;
     }
-  }
-  async requestOtp() {
-    this.alertObj = await this.alertCtrl.create({
-      animated: true,
-      header: 'Send OTP?',
-      message: 'Do you wish to confirm ' + this.phone + ' and receive OTP?',
-      buttons: [
-        {
-          text: 'cancel',
-          role: 'cancel',
-        },
-        {
-          text: 'send OTP',
-          handler: () => {
-            this.restServ.get('getOtp/' + this.phone).toPromise().then(res => {
-              this.serverOtp = res;
-              this.alertObj.dismiss();
-              this.setPhoneNumber();
-              console.log(res);
-            }).catch(err => {
-              this.alertObj.dismiss();
-              console.log(err);
-              alert('Operation failed. Please try again');
-            });
-          }
-        }
-      ]
-    });
-    await this.alertObj.present();
-  }
 
-  setPhoneNumber() {
-    this.phoneset = true;
+    if (this.password !== this.repass) {
+      alert('The new password and repeat password do not match, please check and try again');
+      return;
+    }
+
+    try {
+      const res = await this.restServ.resetPassword(this.phone, this.password);
+      alert('The pasword has been reset successfully, you can now log in with your new password');
+      this.navCtrl.back();
+    } catch (err) {
+      console.log(err);
+      alert(err.message);
+    }
   }
   ngOnInit() {
   }

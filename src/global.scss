@@ -27,9 +27,13 @@
 
 /* Google Icons fetched from server */
 @import url("https://fonts.googleapis.com/icon?family=Material+Icons");
-
-$primary: #3949AB;
+@import url('https://fonts.googleapis.com/css2?family=Comic+Neue:wght@300;400&display=swap');
+$primary: #0C67EA;
 $gray: #707070;
+
+:root {
+    --ion-font-family: 'Comic Neue', 'Roboto';
+}
 
 .primary-bg {
     background: $primary;
@@ -44,7 +48,7 @@ $gray: #707070;
 }
 
 .shadow{
-    box-shadow: 0 10px 20px rgba(0, 0, 0, 0.014), 0 6px 6px rgba(0,0,0,0.21);
+    box-shadow: 0 2px 6px rgba(0, 0, 0, 0.014), 0 4px 4px rgba(0,0,0,0.21);
 }
 
 .card {
@@ -88,6 +92,12 @@ $gray: #707070;
     align-items: center;
 }
 
+.mt0 {
+    margin-top: 0;
+}
+.mt10 {
+    margin-top: 10px;
+}
 .hffs {
     display: flex;
     flex-flow: row;
@@ -161,4 +171,8 @@ p {
     height: 1px;
     min-height: 1px;
     background: $gray;
+}
+
+.white-bg {
+    background: white;
 }

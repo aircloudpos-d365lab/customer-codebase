@@ -1,0 +1,23 @@
+<ion-header>
+  <ion-toolbar>
+    <ion-buttons slot='start'><ion-back-button></ion-back-button></ion-buttons>
+    <ion-title>Cancel order</ion-title>
+  </ion-toolbar>
+</ion-header>
+
+<ion-content>
+  <ion-list>
+    <ion-radio-group allowEmptySelection='true' (ionSelect)='updateReasonRadio()' [(ngModel)]='reason'>
+      <ion-list-header>Select a reason for cancellation:</ion-list-header>
+      <ion-item *ngFor='let r of reasons'>
+        <ion-label>{{r}}</ion-label>
+        <ion-radio color='danger' [value]='r'></ion-radio>
+      </ion-item> 
+      <ion-item>
+        <ion-label  color='danger' position='floating'>Write your own reason</ion-label>
+        <ion-input (ionFocus)='clearRadio()' [(ngModel)]='customReason'></ion-input>
+      </ion-item>
+    </ion-radio-group>
+  </ion-list>
+  <ion-button (click)="submit()" style='margin: 10px;' color='danger' expand='block'>Submit and Cancel Order</ion-button>
+</ion-content>

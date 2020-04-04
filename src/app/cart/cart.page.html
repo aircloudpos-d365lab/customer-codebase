@@ -8,35 +8,68 @@
 </ion-header>
 
 <ion-content>
-  <div class="menu-item" *ngFor='let item of selectedItems'>
-    <div class='hfsb'>
-
-      <div style="align-items: flex-start;" class='hffs'>
-        <img class='menu-item-image' src='{{item.restaurantMenu.restaurantMenuPhoto}}'>
-        <div class='m10'>
-          <p class="black">{{item.restaurantMenu.restaurantMenuName}}</p>
-          <p>₹{{item.restaurantMenu.restaurantMenuFinalPrice}}</p>
-        </div> 
+  <div class='card shadow m10'>
+    <div class="menu-item" *ngFor='let item of selectedItems'>
+      <div class='hfsb'>
+        <div style="align-items: flex-start;" class='hffs'>
+          <img class='menu-item-image' src='{{item.restaurantMenu.restaurantMenuPhoto}}'>
+          <div class='m10'>
+            <p class="black">{{item.restaurantMenu.restaurantMenuName}}</p>
+            <p>₹{{item.restaurantMenu.restaurantMenuPrice}}</p>
+          </div>
+        </div>
+  
+        <div class="item-counter hfc">
+          <p class='solid-bg-left' (click)="changeItemCount(item, -1)">-</p>
+          <p class='item-quantity'>{{item.count}}</p>
+          <p class='solid-bg-right' (click)="changeItemCount(item, 1)">+</p>
+        </div>
       </div>
-
-      <div class="item-counter hfc">
-        <p class='solid-bg-left' (click)="changeItemCount(item, -1)">-</p>
-        <p class='item-quantity'>{{item.count}}</p>
-        <p class='solid-bg-right' (click)="changeItemCount(item, 1)">+</p>
+      <div *ngIf='item.restaurantMenuCustomizationList.length !== 0'>
+        <ion-list>
+          <ion-radio-group allowEmptySelection='true' [(ngModel)]='item.customisation'>
+            <ion-list-header>Select a customisation:</ion-list-header>
+            <ion-item *ngFor='let r of item.restaurantMenuCustomizationList'>
+              <ion-label>{{r.restaurantMenuCustomizationDescription}}</ion-label>
+              <ion-radio [value]='r.restaurantMenuCustomizationDescription'></ion-radio>
+            </ion-item>
+          </ion-radio-group>
+        </ion-list>
       </div>
     </div>
   </div>
   <div>
-    <div class="hr"></div>
+  <div class='card shadow m10'>
     <div class='hfsb'>
       <p class="medium-text">No of items</p>
       <p class="medium-text">{{totalCount}}</p>
     </div>
     <div class='hfsb'>
-      <p class="big-text">Total price</p>
-      <p class="big-text">{{price}}</p>
+      <p class="medium-text">Price of items</p>
+      <p class="medium-text">₹{{price}}</p>
     </div>
-    <div class="hr"></div>
+    <div class='hfsb'>
+      <p class="medium-text">SGST</p>
+      <p class="medium-text">₹{{formatNumber(sgst)}}</p>
+    </div>
+    <div class='hfsb'>
+      <p class="medium-text">CGST</p>
+      <p class="medium-text">₹{{formatNumber(cgst)}}</p>
+    </div>
+    <div class='hfsb'>
+      <p class="big-text">Total price</p>
+      <p class="big-text">₹{{totalPrice}}</p>
+    </div>
+    <!-- <ion-button (click)="startPayment()" style="width: calc(100% - 10px);margin: 5px;">Place Order and Pay</ion-button> -->
+    <ion-button (click)="startOrderCOD()" style="width: calc(100% - 10px);margin: 5px;">Place Order via COD</ion-button>
   </div>
-  <ion-button style="width: 100%;">Place Order</ion-button>
+    <!-- <div class="hr"></div> -->
+    <div *ngIf='showAddressInput' style='background: #e0e0e0;' class='m10 p10 card'>
+      <p class='m10'>Delivery address is not selected, please enter a delivery address to continue</p>
+      <ion-item>
+        <ion-label position='floating'>Enter delivery address</ion-label>
+        <ion-input [(ngModel)]='address'></ion-input>
+      </ion-item>
+    </div>
+  </div>
 </ion-content>

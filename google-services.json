@@ -1,0 +1,48 @@
+{
+  "project_info": {
+    "project_number": "440812917115",
+    "firebase_url": "https://aircloudpos.firebaseio.com",
+    "project_id": "aircloudpos",
+    "storage_bucket": "aircloudpos.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:440812917115:android:a7a00b8d9aac2ded6c2dde",
+        "android_client_info": {
+          "package_name": "com.aircloudpos.special27customer"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "440812917115-atoh7r4ogj0ab1fhfnm69m7mgubtfju0.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "com.aircloudpos.special27customer",
+            "certificate_hash": "7cd1987f450e23949faf59a86fd14d2839ee2d77"
+          }
+        },
+        {
+          "client_id": "440812917115-d8q78mvm8vb62l51i6jh51fe59phgq58.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyANDDBoKMnQajjWJmzLsy3YbLECbSMMnlA"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "440812917115-d8q78mvm8vb62l51i6jh51fe59phgq58.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}

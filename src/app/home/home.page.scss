@@ -4,12 +4,26 @@ $rad: 8px;
 $rad-small: 6px;
 .menu-item-image {
     border-radius: 10px;
-    height: 100px;
-    width: 100px;
+    min-height: 75px;
+    min-width: 75px;
+    height: 75px;
+    width: 75px;
     overflow: hidden;
     object-fit: cover;
 }
 
+.custom-hffs {
+    display: flex;
+    flex-flow: row;
+    justify-content: flex-start;
+    align-items: flex-start;
+}
+.custom-hfsb {
+    display: flex;
+    flex-flow: row;
+    justify-content: space-between;
+    align-items: flex-start;
+}
 .menu-item {
     margin: 10px;
 }

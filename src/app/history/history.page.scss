@@ -1,0 +1,62 @@
+$primary: var(--ion-color-primary, #0C67EA);
+.items {
+    margin: 10px;
+    .head {
+        font-size: 0.9rem;
+        margin-bottom: 0px;
+    }
+
+    .details {
+        margin-top: 0px;
+        color: #202020;
+    }
+}
+
+.hbar {
+    margin: 10px;
+    min-height: 1px;
+    background: #d0d0d0;
+}
+
+.connector {
+    min-height: 10px;
+    background: #A0A0A0;
+}
+
+.milestone {
+    border-radius: 50%;
+    height: 30px;
+    width: 30px;
+    background: white;
+    border: 5px solid #C0C0C0;
+}
+
+.milestone-complete {
+    border-radius: 50%;
+    height: 30px;
+    width: 30px;
+    background: $primary;
+    border: 5px solid #8c9bf8;
+}
+
+.cancel-button {
+    overflow: auto;
+    border-radius: 4px;
+    border: 1px solid #e57373;
+}
+
+.milestone-text {
+    margin: 5px 20px;
+}
+.header-text {
+    font-size: 2rem;margin: 10px 10px 0 10px; color: #606060;
+}
+
+.retry-payment-bar {
+    margin: 10px;
+    display: flex;
+    flex-flow: row;
+    flex-direction: row-reverse;
+    justify-content: flex-start;
+    align-items: center;
+}

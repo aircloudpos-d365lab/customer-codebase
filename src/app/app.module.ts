@@ -11,6 +11,9 @@ import { AppRoutingModule } from './app-routing.module';
 import { UserDataService } from './services/user-data.service';
 import { HttpClientModule } from '@angular/common/http';
 import { GooglePlus } from '@ionic-native/google-plus/ngx';
+import { WebIntent } from '@ionic-native/web-intent/ngx';
+
+import { FirebaseX } from '@ionic-native/firebase-x/ngx';
 @NgModule({
   declarations: [AppComponent],
   entryComponents: [],
@@ -25,6 +28,8 @@ import { GooglePlus } from '@ionic-native/google-plus/ngx';
     StatusBar,
     SplashScreen,
     GooglePlus,
+    WebIntent,
+    FirebaseX,
     { provide: RouteReuseStrategy, useClass: IonicRouteStrategy }
   ],
   bootstrap: [AppComponent]

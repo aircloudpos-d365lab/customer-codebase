@@ -1,43 +1,63 @@
 <ion-content>
-
+  <div style='position: absolute;height: 100%;width: 100%;'>
+    <img src="assets/bg.jpg" style='width: 100%;height: 100%;object-fit: cover;'>
+  </div>
+  <div style='position: absolute;height: 100%;width: 100%;background: #232C5177;'></div>
   <ion-grid style="height: 100%">
     <ion-row color="primary" justify-content-center align-items-center style="height: 100%">
       <ion-col align-self-center size-md="6" size-lg="5" size-xs="12">
         <div text-center>
-          <h1 style="font-size: 3rem">{{(state == 1)?"Sign up":"Log in"}}</h1>
+          <h1 style="color: white;font-size: 3rem">{{(state == 1)?"Sign up":"Log in"}}</h1>
         </div>
+
         <div padding>
-          <ion-item>
-            <ion-label position='floating'>email<span style="color: red;">*</span></ion-label>
-            <ion-input [(ngModel)]='email' type='email'></ion-input>
-          </ion-item>
-          <ion-item>
-            <ion-label position='floating'>password<span style="color: red;">*</span></ion-label>
-            <ion-input [(ngModel)]='password' type='password'></ion-input>
-          </ion-item>
-          <div *ngIf='state == 1'>
-            <ion-item>
-                <ion-label position='floating'>repeat password<span style="color: red;">*</span></ion-label>
-              <ion-input [(ngModel)]='repass' type='password'></ion-input>
-            </ion-item>
-            <ion-item>
-              <ion-label position='floating'>enter your name<span style="color: red;">*</span></ion-label>
-              <ion-input [(ngModel)]='name'></ion-input>
-            </ion-item>
-            <ion-item>
-              <ion-label position='floating'>phone no<span style="color: red;">*</span></ion-label>
+          <div style="background-color: #ffffff77;border-radius: 6px;">
+            <ion-item color='tsbg'>
+              <ion-label position='floating'>phone<span style="color: red;">*</span></ion-label>
               <ion-input type='number' [(ngModel)]='phone'></ion-input>
             </ion-item>
-          </div>
+            <ion-item color='tsbg'>
+              <ion-label position='floating'>password<span style="color: red;">*</span></ion-label>
+              <ion-input [(ngModel)]='password' type='password'></ion-input>
+            </ion-item>
+            <div *ngIf='state == 1'>
+              <ion-item color='tsbg'>
+                  <ion-label position='floating'>repeat password<span style="color: red;">*</span></ion-label>
+                <ion-input [(ngModel)]='repass' type='password'></ion-input>
+              </ion-item>
+              <ion-item color='tsbg'>
+                <ion-label position='floating'>enter your name<span style="color: red;">*</span></ion-label>
+                <ion-input [(ngModel)]='name'></ion-input>
+              </ion-item>
+              <!-- <ion-item>
+                <ion-label position='floating'>enter alternative phone no. (optional)<span style="color: red;">*</span></ion-label>
+                <ion-input type='phone' [(ngModel)]='altphone'></ion-input>
+              </ion-item> -->
+              
+              <ion-item color='tsbg'>
+                <ion-label position='floating'>enter address<span style="color: red;">*</span></ion-label>
+                <ion-input [(ngModel)]='address'></ion-input>
+              </ion-item>
+              
+              <ion-item color='tsbg'>
+                <ion-label position='floating'>email<span style="color: red;">*</span></ion-label>
+                <ion-input type='email' [(ngModel)]='email'></ion-input>
+              </ion-item>
+            </div>
+
+        </div>
+        <div (click)="forgotPassword()" *ngIf='state == 0' style='display: flex; flex-flow: row;justify-content: flex-end;align-items: center'>
+          <p style='color: white;'>forgot password?</p>
+        </div>
           <div text-center>
             <br>
-            <ion-button (click)='signupOrLogin()'>{{(state == 1)?"Sign up":"Log in"}}
+            <ion-button style='width: 100%;' (click)='signupOrLogin()'>{{(state == 1)?"Sign up":"Log in"}}
             </ion-button>
           </div>
           <div text-center>
-            <p (click)='toggleState()'>{{toggleMessage}}</p>
+            <p style='color: #dddddd;' (click)='toggleState()'>{{toggleMessage}}</p>
           </div>
-          <div text-center>
+          <!-- <div text-center>
             <ion-grid>
               <ion-row>
                 <ion-col>
@@ -47,15 +67,15 @@
                       alt="" width="16px" height="16px">&nbsp;Sign in with Google
                   </ion-button>
                 </ion-col>
-                <!-- <ion-col>
+                <ion-col>
                   <ion-button style="background-color: #1877F2;">
                     <ion-icon name="logo-facebook" style="color:white;"></ion-icon>&nbsp;Continue
                     with FaceBook
                   </ion-button>
-                </ion-col> -->
+                </ion-col>
               </ion-row>
             </ion-grid>
-          </div>
+          </div> -->
         </div>
       </ion-col>
 

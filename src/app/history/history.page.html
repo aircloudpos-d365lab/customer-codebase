@@ -1,0 +1,115 @@
+<ion-header>
+  <ion-toolbar>
+    <ion-buttons slot="start">
+      <ion-back-button></ion-back-button>
+    </ion-buttons>
+    <ion-title>My Orders</ion-title>
+  </ion-toolbar>
+</ion-header>
+
+<ion-content>
+  <ion-segment value='active' (ionChange)="orderSegmentChanged($event)">
+    <ion-segment-button value="active">
+      <ion-label>Active</ion-label>
+    </ion-segment-button>
+    <ion-segment-button value="completed">
+      <ion-label>Completed</ion-label>
+    </ion-segment-button>
+  </ion-segment>
+  <ion-refresher (ionRefresh)='refreshPage($event)' slot="fixed" pullFactor="0.5" pullMin="100" pullMax="200">
+    <ion-refresher-content>
+    </ion-refresher-content>
+  </ion-refresher>
+  <p style='margin: 10px;font-size: 1.2rem;text-align: center;'>{{errormessage[currentTab]}}</p>
+  <div *ngIf='currentTab == "active"'>
+    <ion-list>
+      <div class='m10 p10 card shadow' *ngFor='let h of combinedData.active'>
+        <div style='width: 100%;margin-top: 5px;'>
+          <div class='hfsb'>
+            <p style='font-size: 0.9rem;margin: 10px;'>Invoice #{{h.restaurantOrder.orderInvoiceId}}</p>
+            <p style='font-size: 0.9rem;margin: 10px;'>{{getReadableTime(h.restaurantOrder.createdAt)}}</p>
+          </div>
+          <div class='hbar'></div>
+          <div class='retry-payment-bar' *ngIf='!h.restaurantOrder.isOrderPaymentConfirmed && h.restaurantOrder.orderPaymentMode !== "COD"'>
+            <ion-icon (click)="retryPayment(h)" style='padding: 10px;font-size: 1.8rem;' name='refresh'></ion-icon>
+            <p style='color: #f44336;'>Your payment is not confirmed yet, please retry payment</p>
+            <div class='hbar'></div>
+          </div>
+          <div class='items'>
+            <p class='head'>ITEMS</p>
+            <p class='details'>{{getFormattedOrders(h.orderMenuList)}}</p>
+          </div>
+          <div class='hfsb'>
+            <div class='items'>
+              <p class='head'>TOTAL</p>
+              <p class='details'>₹{{h.restaurantOrder.orderGrandTotal}}</p>
+            </div>
+            <div class='items'>
+              <p class='head'>PAYMENT METHOD</p>
+              <p class='details'>{{h.restaurantOrder.orderPaymentMode}}</p>
+            </div>
+          </div>
+        </div>
+        <div *ngIf='h.meta.stepCompleted<=1' (click)="cancelOrder(h)" class='card cancel-button'>
+          <p style='text-align: center;color: #ef5350;margin: 16px;'>Cancel order</p>
+        </div>
+        <div class='hbar'></div>
+        <p>Order status:</p>
+        <div class='hffs'>
+          <div style='z-index: 1;position: absolute;height: 270px;min-width: 6px;margin: 15px 12px;'>
+            <div [style.minHeight]='h.meta.progress +"%"' style='width: 100%; background: #8c9bf8;'>
+            </div>
+            <div [style.minHeight]='(100 - h.meta.progress) + "%"' style='width: 100%; background: #c0c0c0;'>
+            </div>
+          </div>
+          <div style='height: 300px;z-index: 2;' class='vfsb'>
+            <div [ngClass]="(h.meta.stepCompleted > 0) ? 'milestone-complete' : 'milestone'"></div>
+            <div [ngClass]="(h.meta.stepCompleted > 1) ? 'milestone-complete' : 'milestone'"></div>
+            <div [ngClass]="(h.meta.stepCompleted > 2) ? 'milestone-complete' : 'milestone'"></div>
+            <div [ngClass]="(h.meta.stepCompleted > 3) ? 'milestone-complete' : 'milestone'"></div>
+            <div [ngClass]="(h.meta.stepCompleted > 4) ? 'milestone-complete' : 'milestone'"></div>
+          </div>
+          <div style='height: 300px' class='vfsb'>
+            <p class='milestone-text'>{{h.meta.acceptedAt}}</p>
+            <p class='milestone-text'>{{h.meta.preparingAt}}</p>
+            <p class='milestone-text'>{{h.meta.preparedAt}}</p>
+            <p class='milestone-text'>{{h.meta.outForDeliveryAt}}</p>
+            <p class='milestone-text'>{{h.meta.deliveredAt}}</p>
+          </div>
+        </div>
+      </div>
+    </ion-list>
+  </div>
+    
+  <div  *ngIf='currentTab == "completed"'>
+    <ion-list>
+      <div class='m10 p10 card shadow' *ngFor='let h of combinedData.completed'>
+        <div>
+          <img *ngIf='h.restaurantOrder.isOrderCancelledByRestaurant || h.restaurantOrder.isOrderCancelledByCustomer' style='position: absolute;width: 80%;opacity: 0.2;' src='assets/icon/cancelled.png'>
+
+          <div style='width: 100%;margin-top: 5px;'>
+            <p style='font-size: 0.9rem;margin: 10px;'>Invoice #{{h.restaurantOrder.orderInvoiceId}}</p>
+            <div class='hbar'></div>
+            <div class='items'>
+              <p class='head'>ITEMS</p>
+              <p class='details'>{{getFormattedOrders(h.orderMenuList)}}</p>
+            </div>
+            <div class='items'>
+              <p class='head'>ORDERED ON</p>
+              <p class='details'>{{getReadableDate(h.restaurantOrder.orderAcceptedByRestaurantAt)}}</p>
+            </div>
+            <div class='items'>
+              <p class='head'>TOTAL</p>
+              <p class='details'>₹{{h.restaurantOrder.orderGrandTotal}}</p>
+            </div>
+            <div class='items'>
+              <p class='head'>PAYMENT METHOD</p>
+              <p class='details'>{{h.restaurantOrder.orderPaymentMode}}</p>
+            </div>
+          </div>
+        </div>
+      </div>
+    </ion-list>
+  </div>
+    
+</ion-content>

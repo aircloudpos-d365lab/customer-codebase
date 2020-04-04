@@ -8,13 +8,18 @@
       </ion-header>
       
       <ion-content>
-          <ion-item>
-            <ion-menu-toggle (click)='presentAlertRadio()'>
+          <!-- <ion-item (click)='presentAlertRadio()'>
+            <ion-menu-toggle>
                 <ion-label>Change branch</ion-label>
             </ion-menu-toggle>
+          </ion-item> -->
+          <ion-item (click)='goToOrdersHistory()'>
+            <ion-menu-toggle>
+              <ion-label>My Orders</ion-label>
+            </ion-menu-toggle>
           </ion-item>
-          <ion-item>
-            <ion-menu-toggle (click)='logOut()'>
+          <ion-item (click)='logOut()'>
+            <ion-menu-toggle>
                 <ion-label>Log out</ion-label>
             </ion-menu-toggle>
           </ion-item>
@@ -24,7 +29,7 @@
 
 <ion-header>
   <ion-toolbar>
-    <ion-title>
+    <ion-title (click)="printUserData()">
       {{APP_NAME}}
     </ion-title>
     <ion-buttons slot="start">
@@ -39,12 +44,22 @@
   </ion-toolbar>
 
   <ion-searchbar style="width: calc(100% - 20px);padding: 0px;" [ngClass]='(searchVisible)?"reveal":"hidden"' [(value)]='searchVal' (ionChange)='searchMenu($event)' debounce="500"></ion-searchbar>
-  <div (click)="goToCart()" [ngClass]='(price>0)?"reveal-cart":"hidden-cart"' class='primary-bg'>
-    <p class="p10" style="margin: 0px;color: white;">Items added worth ₹{{price}}. Go to cart</p>
+  <div [ngClass]='(price>0)?"reveal-cart":"hidden-cart"' class='primary-bg'>
+    <div class="hfsb">
+      <p  (click)="goToCart()" class="p10" style="margin: 0px;color: white;">Items added worth ₹{{price}}. Go to cart</p>
+      <ion-icon (click)='clearCart()' name="close" style='color: white;padding: 10px;'></ion-icon>
+    </div>
+    
   </div>
 </ion-header>
 
 <ion-content id = 'content'>
+  <ion-fab *ngIf='showCurrentOrderBadge' [routerLink]='["/history"]' [routerDirection]='"forward"' vertical="bottom" horizontal="start" slot="fixed"> 
+    <div style='background: #f44336;border-radius: 50%;height: 20px;width: 20px;position: absolute;right: 0px;'></div>  
+    <div style='margin: 6px;' class='hffs card shadow p10 white-bg'>
+      <img style='height: 40px;' src='assets/icon/food_platter.png'>
+    </div>
+  </ion-fab>
   <ion-fab vertical="bottom" horizontal="end" slot="fixed">
     <ion-fab-button  (click)="toggleSearch()">
       <ion-icon name="search"></ion-icon>
@@ -58,23 +73,26 @@
     <div *ngIf='displayMenu[c] != null'>
       <p class='m10' style="font-size: 1.6rem;">{{c}}</p>
       <div class="menu-item" *ngFor='let item of displayMenu[c]'>
-        <div class='hfsb'>
-  
-          <div style="align-items: flex-start;" class='hffs'>
+        <div class='custom-hfsb'>
+          <div class='custom-hffs'>
             <img class='menu-item-image' src='{{item.restaurantMenu.restaurantMenuPhoto}}'>
-            <div class='m10'>
-              <p class="black">{{item.restaurantMenu.restaurantMenuName}}</p>
-              <p>₹{{item.restaurantMenu.restaurantMenuFinalPrice}}</p>
+            <div style='margin: 0 10px;'>
+              <p class="black mt0">{{item.restaurantMenu.restaurantMenuName}}</p>
+              <p>₹{{item.restaurantMenu.restaurantMenuPrice}}</p>
             </div> 
           </div>
   
-          <div class="item-counter hfc">
+          <div *ngIf='!item.restaurantMenu.isMenuDisabled' class="item-counter mt10 hfc">
             <p class='solid-bg-left' (click)="changeItemCount(item, -1)">-</p>
             <p class='item-quantity'>{{item.count}}</p>
             <p class='solid-bg-right' (click)="changeItemCount(item, 1)">+</p>
+          </div>
+          <div *ngIf='item.restaurantMenu.isMenuDisabled' >
+            <p>current unavailable</p>
           </div>
         </div>
       </div>
     </div>
   </div>
+  <!-- <ion-button style='margin-top: 40px;' (click)='pay()'>Pay</ion-button> -->
 </ion-content>

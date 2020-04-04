@@ -1,51 +1,70 @@
 import { Injectable } from '@angular/core';
 import { MenuList } from '../models/RestaurantDetails';
-import { RestDataService } from './rest-data.service';
+import { LoginResponse, InfoAddBody } from '../models/AuthModels';
 
 @Injectable({
   providedIn: 'root'
 })
 export class UserDataService {
 items: MenuList[];
-branches = ['branch one', 'branch two'];
-  constructor(private rest: RestDataService) {
+RID = 'RgVLcOjwZkG';
+outletIndex = '1';
+outletId;
+  constructor() {
+    this.outletId = this.RID + '_' + this.outletIndex;
     // call some api and fetch relevant data and keep them here
   }
 
-  setUser(user: {username: string, token: string}) {
+  setUser(user: InfoAddBody) {
+    user.restaurantTenantId = this.outletId;
     localStorage.setItem('user', JSON.stringify(user));
   }
 
-  getUser(): {username: string, token: string} {
+  getUser(): InfoAddBody {
     return JSON.parse(localStorage.getItem('user'));
   }
 
-  getSelectedBranch(): string {
-    const b = localStorage.getItem('currentBranch');
-    if (b) {
-      return b;
+  getTenantId(): string {
+    const user = this.getUser();
+    if (user.customerTenantId) {
+      return user.customerTenantId;
     }
-    this.setSelectedBranch(this.branches[0]);
-    return this.branches[0];
+    // alert('using a fake TenantId, please fix the auth');
+    return '0000000000';
   }
 
-  setSelectedBranch(br: string) {
-    localStorage.setItem('currentBranch', br);
+  getSelectedBranchId(): string {
+    // const b = localStorage.getItem('currentBranch');
+    return this.outletId;
   }
 
-  getBranches(): string[] {
-    return this.branches;
+  setSelectedBranchId(br: string) {
+    // localStorage.setItem('currentBranch', br);
+    this.outletId = br;
   }
 
   getAppName(): string {
     return 'Special 27';
   }
 
-  getRestaurantId(): string {
-    return 'R123456';
+  setAddress(add) {
+    const data = this.getUser();
+    data.customerAddress = add;
+    this.setUser(data);
   }
+  getAddress(): string {
+    return this.getUser().customerAddress;
+  }
+
+  getRestaurantId(): string {
+    return this.RID;
+  }
+  getToken(): string {
+    return localStorage.getItem('pushToken');
+  }
+
   logout() {
-    localStorage.setItem('username', null);
+    localStorage.removeItem('user');
   }
 
   setCartItems(items: MenuList[]) {

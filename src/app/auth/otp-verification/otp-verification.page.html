@@ -3,41 +3,26 @@
     <ion-buttons slot="start">
       <ion-back-button></ion-back-button>
     </ion-buttons>
-    <ion-title>Verify your email</ion-title>
+    <ion-title>Reset Password</ion-title>
   </ion-toolbar>
 </ion-header>
 
 <ion-content>
-    <div class="fill-parent vfsb">
-      <div class="fill-width">
-      <p class="m10 red">{{errormessage}}</p>
-          <div class='card shadow m10 p20'>
-            <div *ngIf='!phoneset'>
-              <div class='hffs'>
-                <i class="gray material-icons">mail</i>
-                <p class="ml10 text14">{{email}}</p>
-              </div>
-              <ion-item class="mt20">
-                <ion-input type="number" [(ngModel)]='phone' placeholder='phone no.' (ionChange)='phoneChanged()'></ion-input>
-              </ion-item>
-              <ion-button [disabled]='!showOtpButton' (click)='requestOtp()' expand='block' class="mt20">
-                Send OTP
-              </ion-button>
-            </div>
-            <div *ngIf='phoneset'>
-              <div class='hffs'>
-                <i class="gray material-icons">call</i>
-                <p class='ml10 text14'>{{phone}}</p>
-              </div>
-              <ion-item class="mt20">
-                <ion-label position='floating'>Enter OTP</ion-label>
-                <ion-input type="number" [(ngModel)]='otp' (ionChange)='otpChanged()'></ion-input>
-              </ion-item>
-            </div>
-            </div>
-      </div>
-        <ion-button style="width: calc(100% - 10px)" [disabled]='!enableNext'>Next</ion-button>
+    <div style='border: 1px solid gray;margin: 20px;' class='card p10'>
+      <ion-item>
+        <ion-label position='floating'>Enter phone number</ion-label>
+        <ion-input type='number' [(ngModel)]='phone'></ion-input>
+      </ion-item>
+      <ion-item>
+        <ion-label position='floating'>Enter new password</ion-label>
+        <ion-input type='password' [(ngModel)]='password'></ion-input>
+      </ion-item>
+      <ion-item>
+        <ion-label position='floating'>Repeat new password</ion-label>
+        <ion-input type='password' [(ngModel)]='repass'></ion-input>
+      </ion-item>
+        <ion-button expand='block' (click)="resetPassword()">Reset password</ion-button>
+     
     </div>
-    
   </ion-content>
   

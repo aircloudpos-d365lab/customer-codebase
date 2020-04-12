@@ -27,7 +27,7 @@
 
 /* Google Icons fetched from server */
 @import url("https://fonts.googleapis.com/icon?family=Material+Icons");
-@import url('https://fonts.googleapis.com/css2?family=Comic+Neue:wght@300;400&display=swap');
+/*@import url('https://fonts.googleapis.com/css2?family=Comic+Neue:wght@300;400&display=swap'); */
 $primary: #0C67EA;
 $gray: #707070;
 
@@ -57,6 +57,10 @@ $gray: #707070;
 
 .m10{
     margin: 10px;
+}
+
+.m20{
+    margin: 20px;
 }
 
 .p10 {
@@ -109,6 +113,12 @@ $gray: #707070;
     display: flex;
     flex-flow: column;
     justify-content: space-between;
+    align-items: center;
+}
+.vfc {
+    display: flex;
+    flex-flow: column;
+    justify-content: center;
     align-items: center;
 }
 

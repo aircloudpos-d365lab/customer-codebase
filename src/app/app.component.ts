@@ -16,7 +16,7 @@ import { RestDataService } from './services/rest-data.service';
 export class AppComponent {
   constructor(
     private platform: Platform,
-    private splashScreen: SplashScreen,
+    // private splashScreen: SplashScreen,
     private statusBar: StatusBar,
     private router: NavController,
     private data: UserDataService,
@@ -29,7 +29,7 @@ export class AppComponent {
   initializeApp() {
     this.platform.ready().then(() => {
       this.statusBar.styleDefault();
-      this.splashScreen.hide();
+      // this.splashScreen.hide();
 
       this.firebase.onTokenRefresh().subscribe(token => {
         localStorage.setItem('pushToken', token);
@@ -46,11 +46,5 @@ export class AppComponent {
         }
       });
     });
-
-    const username = this.data.getUser();
-    if (!username) {
-      console.log('user not found, redirecting!');
-      this.router.navigateRoot('authentication');
-    }
   }
 }

@@ -26,7 +26,7 @@ import { FirebaseX } from '@ionic-native/firebase-x/ngx';
   providers: [
     UserDataService,
     StatusBar,
-    SplashScreen,
+    // SplashScreen,
     GooglePlus,
     WebIntent,
     FirebaseX,

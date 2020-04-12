@@ -8,17 +8,70 @@
   "client": [
     {
       "client_info": {
-        "mobilesdk_app_id": "1:440812917115:android:a7a00b8d9aac2ded6c2dde",
+        "mobilesdk_app_id": "1:440812917115:android:2acae4b0c28628836c2dde",
         "android_client_info": {
-          "package_name": "com.aircloudpos.special27customer"
+          "package_name": "com.aircloudpos.special27customerharlur"
         }
       },
       "oauth_client": [
         {
-          "client_id": "440812917115-atoh7r4ogj0ab1fhfnm69m7mgubtfju0.apps.googleusercontent.com",
+          "client_id": "440812917115-n9ma96d04klvejpflf3tg7ao4kkt93mf.apps.googleusercontent.com",
           "client_type": 1,
           "android_info": {
-            "package_name": "com.aircloudpos.special27customer",
+            "package_name": "com.aircloudpos.special27customerharlur",
+            "certificate_hash": "352c2b1863631100ce6e7d0ab08b0f6d9b7fdabb"
+          }
+        },
+        {
+          "client_id": "440812917115-jkomo63s3e3odgqerjfunujc7ld5a4ja.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "com.aircloudpos.special27customerharlur",
+            "certificate_hash": "7cd1987f450e23949faf59a86fd14d2839ee2d77"
+          }
+        },
+        {
+          "client_id": "440812917115-d8q78mvm8vb62l51i6jh51fe59phgq58.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyANDDBoKMnQajjWJmzLsy3YbLECbSMMnlA"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "440812917115-d8q78mvm8vb62l51i6jh51fe59phgq58.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        }
+      }
+    },
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:440812917115:android:132ab91012c741236c2dde",
+        "android_client_info": {
+          "package_name": "com.aircloudpos.special27customervarthur"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "440812917115-chs41og42fcslubrpmt0sq4q4csb4qdb.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "com.aircloudpos.special27customervarthur",
+            "certificate_hash": "352c2b1863631100ce6e7d0ab08b0f6d9b7fdabb"
+          }
+        },
+        {
+          "client_id": "440812917115-71r3u1euogiknpsl5l6brghad90ttphe.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "com.aircloudpos.special27customervarthur",
             "certificate_hash": "7cd1987f450e23949faf59a86fd14d2839ee2d77"
           }
         },

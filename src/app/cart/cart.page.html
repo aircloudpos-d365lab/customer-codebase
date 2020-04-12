@@ -8,22 +8,30 @@
 </ion-header>
 
 <ion-content>
-  <div class='card shadow m10'>
+  <div class='card shadow m20' style='overflow: auto;'>
     <div class="menu-item" *ngFor='let item of selectedItems'>
-      <div class='hfsb'>
-        <div style="align-items: flex-start;" class='hffs'>
-          <img class='menu-item-image' src='{{item.restaurantMenu.restaurantMenuPhoto}}'>
-          <div class='m10'>
-            <p class="black">{{item.restaurantMenu.restaurantMenuName}}</p>
-            <p>₹{{item.restaurantMenu.restaurantMenuPrice}}</p>
-          </div>
-        </div>
-  
-        <div class="item-counter hfc">
+      <div class='hfsb mt10'>
+        <p style='color: black;font-size: 1.2rem;'>₹{{item.restaurantMenu.restaurantMenuPrice * item.count}}<span> ({{item.restaurantMenu.restaurantMenuPrice}} X {{item.count}})</span></p>
+        <div class="item-counter mt10 hfc">
           <p class='solid-bg-left' (click)="changeItemCount(item, -1)">-</p>
           <p class='item-quantity'>{{item.count}}</p>
           <p class='solid-bg-right' (click)="changeItemCount(item, 1)">+</p>
         </div>
+      </div>
+      <div class='custom-hfsb'>
+        <div style="align-items: flex-start;" class='custom-hffs'>
+          <img class='menu-item-image' src='{{item.restaurantMenu.restaurantMenuPhoto}}'>
+          <div class='m10'>
+            <p class="black mt0">{{item.restaurantMenu.restaurantMenuName}}</p>
+            <!-- <p>₹{{item.restaurantMenu.restaurantMenuPrice}}</p> -->
+          </div>
+        </div>
+<!--   
+        <div class="item-counter mt10 hfc">
+          <p class='solid-bg-left' (click)="changeItemCount(item, -1)">-</p>
+          <p class='item-quantity'>{{item.count}}</p>
+          <p class='solid-bg-right' (click)="changeItemCount(item, 1)">+</p>
+        </div> -->
       </div>
       <div *ngIf='item.restaurantMenuCustomizationList.length !== 0'>
         <ion-list>
@@ -38,8 +46,26 @@
       </div>
     </div>
   </div>
+  <div class='card shadow m20 p20'>
+    <div *ngIf='!addressChanged'>
+      <p>Delivering to <b>{{address}}</b><span (click)='addressChanged=true' style='color: #1E88E5;'> (change)</span></p>
+    </div>
+    <div *ngIf='addressChanged'>
+      <p>Select a delivery address:</p>
+      <ion-radio-group>
+        <ion-item *ngFor='let add of addressList'>
+          <ion-label>{{add.customerAddress}}</ion-label>
+          <ion-radio (ionSelect)='address = add.customerAddress' [checked]='(add.customerAddress === address)'></ion-radio>
+        </ion-item>
+      </ion-radio-group>
+      <div [routerLink]='["/profile"]' class='hfc custom-button'>
+        <p>Add new Address</p>
+        <ion-icon name='add'></ion-icon>
+      </div>
+    </div>
+  </div>
   <div>
-  <div class='card shadow m10'>
+  <div class='card shadow m20 p20'>
     <div class='hfsb'>
       <p class="medium-text">No of items</p>
       <p class="medium-text">{{totalCount}}</p>

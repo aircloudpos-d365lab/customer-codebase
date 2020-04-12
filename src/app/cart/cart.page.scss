@@ -9,3 +9,30 @@
     color: #707070;
     margin: 10px 10px 0px 10px;
 }
+
+.menu-item {
+    overflow: auto;
+    margin: 10px;
+}
+
+.custom-button {
+    margin-top: 20px;
+    border: 1px solid #1E88E5;
+    border-radius: 6px;
+    p, ion-icon {
+        color: #1E88E5;
+    }
+}
+
+.custom-hffs {
+    display: flex;
+    flex-flow: row;
+    justify-content: flex-start;
+    align-items: flex-start;
+}
+.custom-hfsb {
+    display: flex;
+    flex-flow: row;
+    justify-content: space-between;
+    align-items: flex-start;
+}

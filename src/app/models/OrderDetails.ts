@@ -59,6 +59,7 @@ export interface RestaurantOrderOutputPayloadList {
 restaurantOrder: RestaurantOrder;
 orderMenuList: OrderMenuList[];
 meta: OrderMetadata;
+formattedList?: string;
 }
 
 export interface OrderMetadata {

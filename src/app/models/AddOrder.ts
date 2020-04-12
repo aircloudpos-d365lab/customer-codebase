@@ -22,4 +22,5 @@ isOrderOutForDelivery: number;
 isOrderCancelledByRestaurant: number;
 isOrderCancelledByCustomer: number;
 isOrderStartedPreparingByRestaurant: number;
+orderAcceptedByRestaurantAt?: string;
 }

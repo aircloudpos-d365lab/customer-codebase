@@ -27,7 +27,7 @@
         <div style='width: 100%;margin-top: 5px;'>
           <div class='hfsb'>
             <p style='font-size: 0.9rem;margin: 10px;'>Invoice #{{h.restaurantOrder.orderInvoiceId}}</p>
-            <p style='font-size: 0.9rem;margin: 10px;'>{{getReadableTime(h.restaurantOrder.createdAt)}}</p>
+            <p style='font-size: 0.9rem;margin: 10px;'>{{getReadableDate(h.restaurantOrder.createdAt)}}</p>
           </div>
           <div class='hbar'></div>
           <div class='retry-payment-bar' *ngIf='!h.restaurantOrder.isOrderPaymentConfirmed && h.restaurantOrder.orderPaymentMode !== "COD"'>
@@ -37,7 +37,7 @@
           </div>
           <div class='items'>
             <p class='head'>ITEMS</p>
-            <p class='details'>{{getFormattedOrders(h.orderMenuList)}}</p>
+            <div class='details' [innerHTML]='h.formattedList'></div>
           </div>
           <div class='hfsb'>
             <div class='items'>
@@ -92,7 +92,7 @@
             <div class='hbar'></div>
             <div class='items'>
               <p class='head'>ITEMS</p>
-              <p class='details'>{{getFormattedOrders(h.orderMenuList)}}</p>
+              <p class='details'>{{(h.formattedList)}}</p>
             </div>
             <div class='items'>
               <p class='head'>ORDERED ON</p>

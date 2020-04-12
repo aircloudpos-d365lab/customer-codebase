@@ -1,14 +1,34 @@
-export interface InfoAddBody {
-customerId: number;
+export interface CustomerAddress {
 customerTenantId: string;
-customerPrimaryContactNo: string;
-customerSecondaryContactNo: string;
 customerName: string;
-customerEmail: string;
+customerContactNumber: string;
 customerAddressType: string;
 customerAddress: string;
 restaurantTenantId: string;
+isDefaultAddress: number;
+}
+
+export interface CustomerDetails {
+customerTenantId: string;
+customerPrimaryContactNo: string;
+customerName: string;
+customerEmail: string;
+customerAddressList: CustomerAddress[];
+restaurantTenantId?: string;
+}
+
+export interface InfoAddBody {
+customerAddress: string;
+customerAddressType: string;
 customerDeviceToken: string;
+customerEmail: string;
+customerId: number;
+customerName: string;
+customerPrimaryContactNo: string;
+customerSecondaryContactNo: string;
+customerTenantId: string;
+restaurantTenantId: string;
+isDefaultAddress: number;
 }
 
 export interface LoginBody {
@@ -34,3 +54,4 @@ export interface LoginResponse {
     customerLastLoggedInAt;
     customerDeviceTokenForApp;
 }
+

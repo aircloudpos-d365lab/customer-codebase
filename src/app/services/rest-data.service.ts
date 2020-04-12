@@ -4,7 +4,7 @@ import { NewCart } from '../models/NewCart';
 import { NewOrder } from '../models/AddOrder';
 import { RestaurantOrder } from '../models/OrderDetails';
 import { UserDataService } from './user-data.service';
-import { LoginBody, InfoAddBody } from '../models/AuthModels';
+import { LoginBody, InfoAddBody, CustomerDetails, CustomerAddress } from '../models/AuthModels';
 import { Observable } from 'rxjs';
 import { Config } from '@ionic/core';
 @Injectable({
@@ -17,7 +17,7 @@ BASEURL = 'http://3.6.179.142:8082/api/';
               public data: UserDataService) {
     let id = localStorage.getItem('branchId');
     if (id == null) {
-      id = '1';
+      id = '2';
     }
     this.RID = this.RID + '_' + id;
   }
@@ -40,6 +40,17 @@ BASEURL = 'http://3.6.179.142:8082/api/';
   createCart(order: NewCart) {
     return this.http.post('http://3.6.179.142:8083/api/customer-cart/persist', order).toPromise();
   }
+
+  updateCart(cartId): Observable<HttpResponse<Config>> {
+    return this.http.post<Config>('http://3.6.179.142:8083/api/customer-cart/order-placed/update?cart_id='
+    + cartId, {}, {observe: 'response'});
+  }
+
+  fetchCartDetails() {
+    return this.http.get('http://3.6.179.142:8083/api/customer-cart/latest?customer_tenant_id='
+    + this.data.getTenantId()).toPromise();
+  }
+  
   getOrderHistory() {
     return this.http.get(
       'http://3.6.179.142:8082/api/old-order-history-of-customer?customer_tenant_id='
@@ -66,7 +77,8 @@ BASEURL = 'http://3.6.179.142:8082/api/';
   }
 
   getMenuSearch(searchval) {
-    return this.http.get('http://3.6.179.142:8084/api/cache/menu/restaurant-menu-search/?menu_prefix=' + searchval).toPromise();
+    return this.http.get('http://3.6.179.142:8084/api/cache/menu/restaurant-menu-search/?menu_prefix=' + searchval
+    + '&restaurant_tenant_id=' + this.data.getSelectedBranchId()).toPromise();
   }
 
   cancelOrder(orderId, reason: string) {
@@ -122,8 +134,10 @@ BASEURL = 'http://3.6.179.142:8082/api/';
     + 'customer-login/reset', body, {responseType: 'text'}).toPromise();
   }
 
-  getDataForUser(tenantId) {
-    return this.http.get('http://3.6.179.142:8082/api/'
+  getDataForUser(): Promise<CustomerDetails> {
+    const tenantId = this.data.getTenantId();
+    console.log(tenantId);
+    return this.http.get<CustomerDetails>('http://3.6.179.142:8082/api/'
     + 'customer-details-for-mobile/?customer_tenant_id='
     + tenantId).toPromise();
   }
@@ -133,5 +147,12 @@ BASEURL = 'http://3.6.179.142:8082/api/';
   }
   addExtraData(data: InfoAddBody) {
     return this.http.post('http://3.6.179.142:8082/api/customer-info/add', data).toPromise();
+  }
+  updateExtraData(data: InfoAddBody) {
+    return this.http.post('http://3.6.179.142:8082/api/customer-info/update', data, {responseType: 'text'}).toPromise();
+  }
+
+  addAddressData(data: CustomerAddress) {
+    return this.http.post('http://3.6.179.142:8082/api/customer-address/add', data, {responseType: 'text'}).toPromise();
   }
 }

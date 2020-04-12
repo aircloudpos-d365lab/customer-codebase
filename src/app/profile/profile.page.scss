@@ -1,0 +1,29 @@
+$primary: var(--ion-color-primary, red);
+
+ion-icon {
+    margin: 10px;
+    color: #777777;
+}
+
+.custom-button {
+    margin-top: 20px;
+    padding: 12px;
+    border-radius: 6px;
+    background: var(--ion-color-primary, red);
+    width: calc(100%);
+    p {
+        margin: 0px;
+        text-align: center;
+        color: white;
+    }
+}
+.address-button {
+    margin-top: 20px;
+    border-radius: 6px;
+    color: $primary;
+    border: 1px solid $primary;
+    p, ion-icon {
+        font-size: 1.1rem;
+        color: $primary;
+    }
+}

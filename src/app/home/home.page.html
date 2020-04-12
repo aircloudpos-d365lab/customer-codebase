@@ -7,7 +7,7 @@
         </ion-toolbar>
       </ion-header>
       
-      <ion-content>
+      <ion-content style='color: #777777;'>
           <!-- <ion-item (click)='presentAlertRadio()'>
             <ion-menu-toggle>
                 <ion-label>Change branch</ion-label>
@@ -15,12 +15,34 @@
           </ion-item> -->
           <ion-item (click)='goToOrdersHistory()'>
             <ion-menu-toggle>
-              <ion-label>My Orders</ion-label>
+              <ion-label class='hffs'>
+                <ion-icon name='cart' class='m10'></ion-icon>
+                My Orders
+              </ion-label>
+            </ion-menu-toggle>
+          </ion-item>
+          <ion-item>
+            <ion-menu-toggle [routerLink]='["/profile"]' [routerDirection]="'forward'">
+              <ion-label class='hffs'>
+                <ion-icon name='person' class='m10'></ion-icon>
+                My Profile
+              </ion-label>
+            </ion-menu-toggle>
+          </ion-item>
+          <ion-item [routerLink]='["/contact-us"]'>
+            <ion-menu-toggle>
+              <ion-label class='hffs'>
+                <ion-icon name="help-circle-outline" class='m10'></ion-icon>
+                Contact Us
+              </ion-label>
             </ion-menu-toggle>
           </ion-item>
           <ion-item (click)='logOut()'>
             <ion-menu-toggle>
-                <ion-label>Log out</ion-label>
+              <ion-label class='hffs'>
+                <ion-icon name='power' class='m10'></ion-icon>
+                Log out
+              </ion-label>
             </ion-menu-toggle>
           </ion-item>
       </ion-content>
@@ -43,33 +65,108 @@
     </ion-buttons>
   </ion-toolbar>
 
-  <ion-searchbar style="width: calc(100% - 20px);padding: 0px;" [ngClass]='(searchVisible)?"reveal":"hidden"' [(value)]='searchVal' (ionChange)='searchMenu($event)' debounce="500"></ion-searchbar>
+  <ion-searchbar style="width: calc(100% - 20px);padding: 0px;" [ngClass]='searchbarClass' [(ngModel)]='random' [(value)]='searchVal' (ionChange)='searchMenu($event)' debounce="500"></ion-searchbar>
   <div [ngClass]='(price>0)?"reveal-cart":"hidden-cart"' class='primary-bg'>
     <div class="hfsb">
-      <p  (click)="goToCart()" class="p10" style="margin: 0px;color: white;">Items added worth ₹{{price}}. Go to cart</p>
-      <ion-icon (click)='clearCart()' name="close" style='color: white;padding: 10px;'></ion-icon>
+      <p class="p10" style="margin: 0px;color: white;">Items added worth ₹{{price}}.</p>
+      <div (click)='clearCart()' class='hfc'>
+        <p style="margin: 0px;color: white;">clear cart</p>
+        <ion-icon name="close" style='color: white;padding: 10px;'></ion-icon>
+      </div>
     </div>
-    
   </div>
 </ion-header>
 
 <ion-content id = 'content'>
-  <ion-fab *ngIf='showCurrentOrderBadge' [routerLink]='["/history"]' [routerDirection]='"forward"' vertical="bottom" horizontal="start" slot="fixed"> 
+  <!-- <ion-fab *ngIf='showCurrentOrderBadge' [routerLink]='["/history"]' [routerDirection]='"forward"' vertical="bottom" horizontal="start" slot="fixed"> 
     <div style='background: #f44336;border-radius: 50%;height: 20px;width: 20px;position: absolute;right: 0px;'></div>  
     <div style='margin: 6px;' class='hffs card shadow p10 white-bg'>
       <img style='height: 40px;' src='assets/icon/food_platter.png'>
     </div>
-  </ion-fab>
+  </ion-fab> -->
+  <div *ngIf='loadingmenu'>
+    <div>
+      <div class='m10 hffs'>
+        <div class='menu-item-image' style='margin: 0' slot="start">
+          <ion-skeleton-text animated></ion-skeleton-text>
+        </div>
+        <div class='m10' style='width: 100%'>
+          <h3>
+            <ion-skeleton-text animated style="width: 50%"></ion-skeleton-text>
+          </h3>
+          <p>
+            <ion-skeleton-text animated style="width: 80%"></ion-skeleton-text>
+          </p>
+          <p>
+            <ion-skeleton-text animated style="width: 60%"></ion-skeleton-text>
+          </p>
+        </div>
+      </div>
+    </div>
+    <div>
+      <div class='m10 hffs'>
+        <div class='menu-item-image' style='margin: 0' slot="start">
+          <ion-skeleton-text animated></ion-skeleton-text>
+        </div>
+        <div class='m10' style='width: 100%'>
+          <h3>
+            <ion-skeleton-text animated style="width: 50%"></ion-skeleton-text>
+          </h3>
+          <p>
+            <ion-skeleton-text animated style="width: 80%"></ion-skeleton-text>
+          </p>
+          <p>
+            <ion-skeleton-text animated style="width: 60%"></ion-skeleton-text>
+          </p>
+        </div>
+      </div>
+    </div>
+    <div>
+      <div class='m10 hffs'>
+        <div class='menu-item-image' style='margin: 0' slot="start">
+          <ion-skeleton-text animated></ion-skeleton-text>
+        </div>
+        <div class='m10' style='width: 100%'>
+          <h3>
+            <ion-skeleton-text animated style="width: 50%"></ion-skeleton-text>
+          </h3>
+          <p>
+            <ion-skeleton-text animated style="width: 80%"></ion-skeleton-text>
+          </p>
+          <p>
+            <ion-skeleton-text animated style="width: 60%"></ion-skeleton-text>
+          </p>
+        </div>
+      </div>
+    </div>
+  </div>
+
+
+
+  <!-- <div *ngIf='loadingmenu' class='vfc'>
+    <p>Loading menu</p>
+    <ion-progress-bar></ion-progress-bar>
+  </div> -->
   <ion-fab vertical="bottom" horizontal="end" slot="fixed">
-    <ion-fab-button  (click)="toggleSearch()">
+    <ion-fab-button class='search-fab' (click)="toggleSearch()">
       <ion-icon name="search"></ion-icon>
     </ion-fab-button>
     <ion-fab-list side="top">
       <!-- <ion-fab-button><ion-icon name="logo-vimeo"></ion-icon></ion-fab-button> -->
     </ion-fab-list>
   </ion-fab>
+  <ion-fab (click)="goToCart()" *ngIf='price>0' style='margin-bottom: 80px' vertical="bottom" horizontal="end" slot="fixed">
+    <!-- <div class='counter-badge hfc shadow'>{{counterBadge}}</div> -->
+    <ion-fab-button color='success' style='z-index: 1'>
+      <ion-icon name="cart"></ion-icon>
+    </ion-fab-button>
+  </ion-fab>
   
-  <div style='margin-bottom: 40px;' *ngFor='let c of categories'>
+  <div class='vfc' style='height: 100%;' *ngIf='errordisplay'>
+    <img style='width: 50%; opacity: 0.5;' src='assets/fnf.png'>
+    <p>{{errormessage}}</p>
+  </div>
+  <div style='margin-bottom: 60px;' *ngFor='let c of categories'>
     <div *ngIf='displayMenu[c] != null'>
       <p class='m10' style="font-size: 1.6rem;">{{c}}</p>
       <div class="menu-item" *ngFor='let item of displayMenu[c]'>
@@ -94,5 +191,5 @@
       </div>
     </div>
   </div>
-  <!-- <ion-button style='margin-top: 40px;' (click)='pay()'>Pay</ion-button> -->
+  <div *ngIf='!errordisplay' style='margin-top: 150px;'></div>
 </ion-content>

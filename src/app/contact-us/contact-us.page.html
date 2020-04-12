@@ -1,0 +1,40 @@
+<ion-header>
+  <ion-toolbar>
+    <ion-buttons slot="start">
+      <ion-back-button></ion-back-button>
+    </ion-buttons>
+    <ion-title>Contact Us</ion-title>
+  </ion-toolbar>
+</ion-header>
+
+<ion-content>
+  <div class='card shadow white-bg m20 p20'>
+    <div class='hfc' *ngIf='restaurant'>
+      <p style='color: #444444;font-size: 1.2rem;margin: 10px'>{{restaurant?.restaurantBrandName + ': '}}</p>
+      <p style='color: #555555;font-size: 1.1rem;margin: 10px'>{{restaurant?.restaurantOutletName}}</p>
+    </div>
+    <p style='font-size: 1.2rem;'>Are you having issues with your order?</p>
+    <p>Contact our restaurant executive directly</p>
+
+    <div *ngIf='restaurant' class='hfsb'>
+      <div class='hffs'>
+        <ion-icon name='business' class='m10'></ion-icon>
+        <p>{{restaurant.restaurantContactNo}}</p>
+      </div>
+    </div>
+    <div *ngIf='restaurant' class='hfse'>
+      <a [href]='"tel:" + restaurant.restaurantContactNo'>
+        <ion-button fill='clear'>
+          <ion-icon class='m10' name='call'></ion-icon>
+          <p>Call</p>
+        </ion-button>
+      </a>
+      <a [href]='"https://wa.me/" + restaurant.restaurantContactNo'>
+        <ion-button fill='clear'>
+          <ion-icon class='m10' name='logo-whatsapp'></ion-icon>
+          <p>WhatsApp</p>
+        </ion-button>
+      </a>
+    </div>
+  </div>
+</ion-content>

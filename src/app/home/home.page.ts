@@ -3,7 +3,6 @@ import { UserDataService } from '../services/user-data.service';
 import { NavController, AlertController, Platform } from '@ionic/angular';
 import { RestDataService } from '../services/rest-data.service';
 import { RestaurantDetailsResponse, MenuList } from '../models/RestaurantDetails';
-import { OrderResponse } from '../models/OrderDetails';
 
 
 @Component({
@@ -21,6 +20,7 @@ detailsResponse: RestaurantDetailsResponse;
 displayMenu: any = {};
 categories: string[] = [];
 searchVisible = false;
+searchbarClass = 'hidden';
 veg = false;
 vegMenu: any = {};
 originalMenu;
@@ -28,7 +28,10 @@ originalCategories;
 searchVal; // used in html
 searchItemText = 'search results';
 showCurrentOrderBadge = false;
-
+random = '';
+errordisplay = false;
+errormessage = '';
+loadingmenu = false;
   constructor(public data: UserDataService,
               private navCtrl: NavController,
               private restServ: RestDataService,
@@ -42,22 +45,26 @@ showCurrentOrderBadge = false;
     this.price = 0;
     this.selectedItems = [];
     this.searchVisible = false;
+    this.searchbarClass = 'hidden';
     this.veg = false;
 
     this.APP_NAME = this.data.getAppName();
     this.setBranchNameForId(this.data.getSelectedBranchId());
-    
+
     this.displayMenu = [];
     this.vegMenu = [];
+    this.loadingmenu = true;
     this.restServ.getRestaurantDetails().subscribe(res => {
+      this.loadingmenu = false;
       console.log(res);
       const result: any = res;
+      this.data.setRestaurantPhoneNumber(result.restaurantContactNo);
       this.detailsResponse = result;
       const menu = this.detailsResponse.menuList;
 
       menu.forEach(item => {
         if (!this.displayMenu[item.restaurantMenu.restaurantMenuType]) {
-          console.log('pushing ' + item.restaurantMenu.restaurantMenuType);
+          // console.log('pushing ' + item.restaurantMenu.restaurantMenuType);
           this.displayMenu[item.restaurantMenu.restaurantMenuType] = [];
         }
 
@@ -80,6 +87,16 @@ showCurrentOrderBadge = false;
       console.log(this.displayMenu);
       this.originalMenu = this.displayMenu;
     });
+    this.fetchCartDetailsFromServer();
+  }
+
+  async fetchCartDetailsFromServer() {
+    try {
+      const data = await this.restServ.fetchCartDetails();
+      console.log(data);
+    } catch (err) {
+      console.log(err);
+    }
   }
 
   async setBranchNameForId(id) {
@@ -116,7 +133,28 @@ showCurrentOrderBadge = false;
     console.log(this.data.getUser());
   }
 
+  getMenuSearch(key: string) {
+    key = key.trim().toLowerCase();
+    const res = [];
+    console.log(this.displayMenu);
+    this.originalCategories.forEach(element => {
+      if (!this.displayMenu[element]) {
+        return;
+      }
+      (this.displayMenu[element]).forEach(menuObject => {
+        let name: string = menuObject.restaurantMenu.restaurantMenuName;
+        name = name.toLowerCase();
+        if (name.indexOf(key) > -1) {
+          res.push(menuObject.restaurantMenu.restaurantMenuName + '/' + menuObject.restaurantMenu.restaurantMenuId);
+        }
+      });
+    });
+    console.log(res);
+    return res;
+  }
+
   async searchMenu($event) {
+    this.errordisplay = false;
     const searchKey = $event.detail.value;
 
     if (searchKey === '') {
@@ -125,9 +163,17 @@ showCurrentOrderBadge = false;
       return;
     }
 
-    const response: any = await this.restServ.getMenuSearch(searchKey);
+    const response: any = this.getMenuSearch(searchKey);
 
-    console.log(response);
+    if (response.length === 0) {
+      console.log('no matching items found!');
+      this.errormessage = 'No Food items found';
+      this.errordisplay = true;
+    } else {
+      this.errordisplay = false;
+    }
+
+    // console.log(response);
     const foodToDisplay = {};
     response.forEach(element => {
       const elem: any = element;
@@ -137,8 +183,8 @@ showCurrentOrderBadge = false;
       foodToDisplay[res] = 1;
     });
 
-    console.log(foodToDisplay);
-    console.log(this.displayMenu);
+    // console.log(foodToDisplay);
+    // console.log(this.displayMenu);
     this.filterMenu(foodToDisplay);
   }
 
@@ -152,10 +198,10 @@ showCurrentOrderBadge = false;
     this.displayMenu = this.originalMenu;
     const results = [];
 
-    this.categories.forEach(element => {
+    this.originalCategories.forEach(element => {
       if (this.displayMenu[element]) {
         this.displayMenu[element].forEach(items => {
-          console.log(items.restaurantMenu.restaurantMenuId);
+          // console.log(items.restaurantMenu.restaurantMenuId);
           if (food[items.restaurantMenu.restaurantMenuId]) {
             results.push(items);
           }
@@ -164,8 +210,12 @@ showCurrentOrderBadge = false;
     });
 
     this.displayMenu[this.searchItemText] = results;
-    this.categories = [this.searchItemText];
-    console.log(this.displayMenu);
+    if (results.length !== 0) {
+      this.categories = [this.searchItemText];
+    } else {
+      this.categories = [];
+    }
+    // console.log(this.displayMenu);
   }
 
   async presentAlertRadio() {
@@ -173,7 +223,7 @@ showCurrentOrderBadge = false;
     try {
       const branches: any  = await this.restServ.getBranches();
       const curr = this.data.getSelectedBranchId();
-      console.log(branches);
+      // console.log(branches);
       branches.restaurantTenantList.forEach(element => {
         const obj = {
           name: element.restaurantOutletName,
@@ -196,12 +246,12 @@ showCurrentOrderBadge = false;
             role: 'cancel',
             cssClass: 'secondary',
             handler: () => {
-              console.log('Confirm Cancel');
+              // console.log('Confirm Cancel');
             }
           }, {
             text: 'Ok',
             handler: (resData) => {
-              console.log(resData);
+              // console.log(resData);
               if (resData !== curr) {
                 this.data.setSelectedBranchId(resData);
                 this.BRANCH = resData;
@@ -229,7 +279,9 @@ showCurrentOrderBadge = false;
 
   ionViewWillEnter() {
     this.selectedItems = this.data.getCartItems();
-
+    if (!this.selectedItems || this.selectedItems.length === 0) {
+      this.clearCart();
+    }
     this.categories.forEach(element => {
       if (this.displayMenu[element]) {
         this.displayMenu[element].forEach(items => {
@@ -270,19 +322,42 @@ showCurrentOrderBadge = false;
     this.data.setCartItems(this.selectedItems);
     this.navCtrl.navigateForward('cart');
   }
+
+  filterSearchResults() {
+    if (this.searchVisible) {
+      console.log('search is visible, filtering results');
+      this.searchMenu({detail: {value: this.random}});
+    } else {
+      console.log('search is not visible');
+    }
+  }
+
   toggleSearch() {
+    // console.log(this.random);
     this.searchVisible = !this.searchVisible;
     if (!this.searchVisible) {
+      this.errordisplay = false;
+      this.hideSearchbar();
       this.categories = this.originalCategories;
       this.refreshMenu(false);
     } else {
+      this.random = '';
+      this.searchbarClass = 'reveal';
       this.searchVal = '';
     }
+  }
+
+  hideSearchbar() {
+    this.searchbarClass = 'hide';
+    setTimeout(() => {
+      this.searchbarClass = 'hidden';
+    }, 700);
   }
 
   toggleVeg() {
     this.veg = !this.veg;
     this.refreshMenu(true);
+    this.filterSearchResults();
   }
 
   refreshMenu(resetCount: boolean) {
@@ -318,23 +393,13 @@ showCurrentOrderBadge = false;
         });
       }
     });
-    console.log(this.displayMenu);
+    // console.log(this.displayMenu);
   }
 
   ionViewDidEnter() {
     this.subscription = this.platform.backButton.subscribe(() => {
         const app = 'app';
         navigator[app].exitApp();
-    });
-
-    this.restServ.getCurrentOrderList().then(res => {
-      const response: any = res;
-      const data: OrderResponse = response;
-      if (data.restaurantOrderOutputPayloadList.length > 0) {
-        this.showCurrentOrderBadge = true;
-      }
-    }).catch(err => {
-      console.log(err);
     });
   }
 

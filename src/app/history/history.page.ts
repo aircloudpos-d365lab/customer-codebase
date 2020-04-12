@@ -25,6 +25,7 @@ combinedData: {
 };
 currentTab = 'active';
 loader: HTMLIonLoadingElement;
+shouldRefreshData: boolean = true;
   constructor(private restServ: RestDataService,
               private alertController: AlertController,
               private navCtrl: NavController,
@@ -32,7 +33,7 @@ loader: HTMLIonLoadingElement;
               private loadingController: LoadingController) { }
 
   ngOnInit() {
-    this.refreshPage(null);
+    // this.refreshPage(null);
   }
 
   async refreshPage(event) {
@@ -67,17 +68,20 @@ loader: HTMLIonLoadingElement;
         this.errormessage.active = '';
       }
 
+      response.restaurantOrderOutputPayloadList = response.restaurantOrderOutputPayloadList.reverse();
       response.restaurantOrderOutputPayloadList.forEach(element => {
         const ro: RestaurantOrder = element.restaurantOrder;
         let progress = 0;
+        element.formattedList = this.getFormattedOrders(element.orderMenuList);
+
         element.meta = {
           progress: 0,
           stepCompleted: 0,
-          acceptedAt: '--under progress--',
-          preparedAt: '--under progress--',
-          preparingAt: '--under progress--',
-          outForDeliveryAt: '--under progress--',
-          deliveredAt: '--under progress--'
+          acceptedAt: 'Order not accepted yet',
+          preparedAt: 'Order not prepared yet',
+          preparingAt: 'Order did not start preparing yet',
+          outForDeliveryAt: 'Order not out for delivery yet',
+          deliveredAt: 'Order not delivered yet'
         };
         if (ro.isOrderAcceptedByRestaurant) {
           progress++;
@@ -112,8 +116,10 @@ loader: HTMLIonLoadingElement;
 
       if (this.combinedData.active.length > 0) {
         setTimeout(() => {
-          this.getActiveOrderStatus();
-        }, 25000);
+          if (this.shouldRefreshData) {
+            this.getActiveOrderStatus();
+          }
+        }, 30000);
       }
       console.log(this.combinedData.active);
 
@@ -136,8 +142,11 @@ loader: HTMLIonLoadingElement;
         this.errormessage.completed = '';
       }
 
+      response.restaurantOrderOutputPayloadList = response.restaurantOrderOutputPayloadList.reverse();
+      response.restaurantOrderOutputPayloadList.forEach(element => {
+        element.formattedList = this.getFormattedOrders(element.orderMenuList);
+      });
       this.combinedData.completed = response.restaurantOrderOutputPayloadList;
-      this.combinedData.completed[1].restaurantOrder.isOrderCancelledByCustomer = 1;
       console.log(this.combinedData.completed);
 
     }).catch(err => {
@@ -146,31 +155,43 @@ loader: HTMLIonLoadingElement;
     });
   }
 
-  async presentAlert(order) {
-    console.log(new Date(order.restaurantOrder.orderAcceptedByRestaurantAt).toLocaleTimeString());
-    const alert = await this.alertController.create({
-      header: 'Order Details',
-      subHeader: 'Date of order: ' + this.getReadableDate(order.restaurantOrder.orderAcceptedByRestaurantAt),
-      message: this.getFormattedOrders(order.orderMenuList),
-      buttons: ['OK']
-    });
+  // async presentAlert(order) {
+  //   console.log(new Date(order.restaurantOrder.orderAcceptedByRestaurantAt).toLocaleTimeString());
+  //   const alert = await this.alertController.create({
+  //     header: 'Order Details',
+  //     subHeader: 'Date of order: ' + this.getReadableDate(order.restaurantOrder.orderAcceptedByRestaurantAt),
+  //     message: this.getFormattedOrders(order.orderMenuList),
+  //     buttons: ['OK']
+  //   });
 
-    await alert.present();
-  }
+  //   await alert.present();
+  // }
 
   getFormattedOrders(menuList) {
     let res = '';
     console.log(menuList);
     menuList.forEach(element => {
-      res += ((res !== '') ? ', ' : '') + element.cartRestaurantMenuQty + ' X ' + element.cartRestaurantMenuName;
+      res += '<p>' + element.cartRestaurantMenuQty + ' X ' + element.cartRestaurantMenuName + '</p>';
     });
     return res;
+  }
+
+  isToday(someDate) {
+    const today = new Date();
+    return someDate.getDate() == today.getDate() &&
+      someDate.getMonth() == today.getMonth() &&
+      someDate.getFullYear() == today.getFullYear();
   }
 
   getReadableDate(dt) {
     const months = ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun', 'Jul', 'Aug', 'Sep', 'Oct', 'Nov', 'Dec'];
     const date = new Date(dt);
-    return date.getDate() + ' ' + months[date.getMonth()] + ' ' + date.getFullYear()
+    let dayString = date.getDate() + ' ' + months[date.getMonth()] + ' ' + date.getFullYear();
+    if (this.isToday(date)) {
+      dayString = 'Today';
+    }
+
+    return dayString
     + ' at '
     + (date.getHours() % 12)
     + ':'
@@ -183,6 +204,10 @@ loader: HTMLIonLoadingElement;
     this.refreshPage(null);
   }
 
+  ionViewDidLeave() {
+    console.log('goodbye moonmen');
+    this.shouldRefreshData = false;
+  }
   orderSegmentChanged(event) {
     this.currentTab = event.detail.value;
     console.log(this.currentTab);

@@ -4,7 +4,7 @@ import { NavController, LoadingController, Platform } from '@ionic/angular';
 import { GooglePlus } from '@ionic-native/google-plus/ngx';
 import { RestDataService } from 'src/app/services/rest-data.service';
 import { UserDataService } from 'src/app/services/user-data.service';
-import { LoginResponse, InfoAddBody, LoginBody } from 'src/app/models/AuthModels';
+import { InfoAddBody, LoginBody, CustomerDetails } from 'src/app/models/AuthModels';
 
 @Component({
   selector: 'app-authentication',
@@ -25,6 +25,19 @@ export class AuthenticationPage implements OnInit {
   addressType = 'home';
   somedata;
   subscription;
+
+  line1 = '';
+  line2 = '';
+  city = '';
+  pin = '';
+  buttonTextMap = {
+    0: 'Log in',
+    1: 'Register'
+  };
+  head = {
+    0: 'Log In',
+    1: 'Sign up'
+  };
   constructor(private navCtrl: NavController,
               private googlePlus: GooglePlus,
               private rest: RestDataService,
@@ -71,13 +84,15 @@ export class AuthenticationPage implements OnInit {
             alert('Wrong credentials provided!');
             return;
           } else {
-            const resp = res.body;
+            const resp: any = res.body;
             console.log(resp);
+            // TODO, do whatever youre doing here
             try {
               await this.getDataForUser(this.phone);
               this.navCtrl.navigateRoot('home');
             } catch (er) {
               alert('failed to fetch user details, log in could not be completed');
+              console.log(er);
             } finally {
               loader.dismiss();
             }
@@ -87,7 +102,7 @@ export class AuthenticationPage implements OnInit {
         await loader.dismiss();
         console.log(err);
       }
-    } else {
+    } else if (this.state === 1) {
       if (!this.emailPattern.test(this.email)) {
         alert('Please enter a valid email to continue!');
         return;
@@ -105,23 +120,39 @@ export class AuthenticationPage implements OnInit {
         return;
       }
 
-      if (!this.check(this.name, 'Name')) {
-        return;
-      }
-
       if (!this.phonePattern.test(this.phone)) {
         alert('Please enter a valid phone number');
         return;
       }
-
-      if (!this.check(this.address, 'Address')) {
+      this.state = 2;
+    } else {
+      console.log('here');
+      if (!this.check(this.name, 'Name')) {
         return;
       }
 
-      if (!this.check(this.addressType, 'Address Type')) {
+      if (!this.check(this.line1, 'Line 1')) {
         return;
       }
 
+      if (!this.check(this.city, 'City')) {
+        return;
+      }
+
+      if (!this.check(this.pin, 'PIN Code')) {
+        return;
+      }
+
+      if ((this.pin + '').length !== 6) {
+        console.log(this.pin);
+        console.log((this.pin + '').length);
+        alert('PIN Code is invalid!');
+        return;
+      }
+
+      this.address = this.line1 + ' ' + this.line2 + ' ' + this.city + ' ' + this.pin;
+      this.addressType = 'default';
+      console.log('here');
       const loader = await this.createLoading('Please wait...');
       try {
         loader.present();
@@ -135,7 +166,8 @@ export class AuthenticationPage implements OnInit {
           customerPrimaryContactNo: this.phone,
           customerSecondaryContactNo: this.phone,
           customerTenantId: this.phone,
-          restaurantTenantId: this.data.getSelectedBranchId()
+          restaurantTenantId: this.data.getSelectedBranchId(),
+          isDefaultAddress: 1
         };
 
         const loginData: LoginBody = {
@@ -159,7 +191,7 @@ export class AuthenticationPage implements OnInit {
         response = await this.rest.addLoginData(loginData);
         loader.dismiss();
         console.log(response);
-        this.data.setUser(infoData);
+        this.getDataForUser(this.phone);
         this.navCtrl.navigateForward('home');
       } catch (err) {
         console.log('error occured');
@@ -181,13 +213,14 @@ export class AuthenticationPage implements OnInit {
   }
   async getDataForUser(tenantId) {
     try {
+      this.data.setTenantId(tenantId);
       console.log('trying to fetch user data');
-      const res: any = await this.rest.getDataForUser(tenantId);
-      const resp: InfoAddBody = res;
-      console.log(resp);
-      this.data.setUser(resp);
+      const res: CustomerDetails = await this.rest.getDataForUser();
+      console.log(res);
+      this.data.setUser(res);
     } catch (er) {
       console.log('failed to get user data and store them');
+      console.log(er);
     }
   }
 

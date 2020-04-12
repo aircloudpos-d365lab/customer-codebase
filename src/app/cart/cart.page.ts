@@ -6,6 +6,7 @@ import { NewOrder } from '../models/AddOrder';
 import { NewCart, CartMenuList } from '../models/NewCart';
 import { NavController, AlertController, LoadingController } from '@ionic/angular';
 import { RestaurantOrderOutputPayloadList, RestaurantOrder } from '../models/OrderDetails';
+import { CustomerAddress } from '../models/AuthModels';
 
 declare var RazorpayCheckout: any;
 
@@ -27,12 +28,45 @@ loader: HTMLIonLoadingElement;
 address;
 showAddressInput = false;
 isCOD = false;
-
+addressChanged = false;
+addressList: CustomerAddress[];
   constructor(private data: UserDataService,
               private rest: RestDataService,
               private navCtrl: NavController,
               private alertController: AlertController,
               private loadingController: LoadingController) {
+  }
+
+  changeItemCount(item: MenuList, count: number) {
+    if (count === -1 && item.count === 0) {
+      return;
+    }
+
+    item.count += count;
+    this.totalCount += count;
+    this.totalPrice += item.restaurantMenu.restaurantMenuFinalPrice * count;
+    this.price += item.restaurantMenu.restaurantMenuPrice * count;
+    this.sgst += item.restaurantMenu.restaurantMenuPrice * count * item.restaurantMenu.restaurantMenuPriceSgstPercentage / 100;
+    this.cgst += item.restaurantMenu.restaurantMenuPrice * count * item.restaurantMenu.restaurantMenuPriceCgstPercentage / 100;
+
+    this.totalPrice = this.formatNumber(this.totalPrice);
+  }
+
+  ngOnInit() {
+    this.inflateItemList();
+    this.refreshCustomerAddresses();
+  }
+
+  refreshCustomerAddresses() {
+    this.addressList = this.data.getAddressList();
+    this.addressList.forEach(element => {
+      if (element.isDefaultAddress) {
+        this.address = element.customerAddress;
+      }
+    });
+  }
+
+  inflateItemList() {
     this.selectedItems = this.data.getCartItems();
     if (!this.selectedItems) {
       this.navCtrl.back();
@@ -56,27 +90,8 @@ isCOD = false;
     });
   }
 
-  changeItemCount(item: MenuList, count: number) {
-    if (count === -1 && item.count === 0) {
-      return;
-    }
-
-    item.count += count;
-    this.totalCount += count;
-    this.totalPrice += item.restaurantMenu.restaurantMenuFinalPrice * count;
-    this.price += item.restaurantMenu.restaurantMenuPrice * count;
-    this.sgst += item.restaurantMenu.restaurantMenuPrice * count * item.restaurantMenu.restaurantMenuPriceSgstPercentage / 100;
-    this.cgst += item.restaurantMenu.restaurantMenuPrice * count * item.restaurantMenu.restaurantMenuPriceCgstPercentage / 100;
-
-    this.totalPrice = this.formatNumber(this.totalPrice);
-  }
-
-  ngOnInit() {
-  }
-
-
   getDisplayMessage(): string {
-    return 'Address: ' + this.data.getAddress() + '<br>'
+    return 'Address: ' + this.address + '<br>'
     + 'Amount: ' + this.formatNumber(this.totalPrice + this.deliveryCharge);
   }
 
@@ -86,23 +101,11 @@ isCOD = false;
     this.startPayment();
   }
   async startPayment() {
-    if (this.data.getAddress() === null) {
-      if (this.showAddressInput === false) {
-        this.showAddressInput = true;
-        alert('please enter a delivery address to continue');
-        return;
-      } else {
-        if (this.address && this.address !== '') {
-          this.data.setAddress(this.address);
-          this.presentAlertConfirm();
-        } else {
-          alert('You must enter a delivery address to place an order!');
-        }
-      }
-    }
-    else {
-      this.presentAlertConfirm();
-    }
+    this.presentAlertConfirm();
+  }
+
+  ionViewDidEnter() {
+    this.refreshCustomerAddresses();
   }
 
   async presentAlertConfirm() {
@@ -175,7 +178,7 @@ isCOD = false;
       const res: any = await this.rest.createCart(body);
       body = res;
       console.log(res);
-      this.addOrder(body);
+      this.updateCart(body);
     } catch (err) {
       console.log(err);
       await this.loader.dismiss();
@@ -183,6 +186,19 @@ isCOD = false;
     }
   }
 
+  async updateCart(body: NewCart) {
+    try {
+      this.rest.updateCart(body.cartMenuList[0].cartId)
+      .subscribe(res => {
+        if (res.status === 200) {
+          this.addOrder(body);
+        }
+      });
+    } catch (err) {
+      console.log(err);
+      this.createAlert('Failed to place order, please try again');
+    }
+  }
 
   async addOrder(rzorder: NewCart) {
     try {
@@ -191,7 +207,7 @@ isCOD = false;
       = {
         cartId: rzorder.cartMenuList[0].cartId,
         customerTenantId: rzorder.customerTenantId,
-        isOrderAcceptedByRestaurant: 0,
+        isOrderAcceptedByRestaurant: 1,
         isOrderCancelledByCustomer: 0,
         isOrderCancelledByRestaurant: 0,
         isOrderDelivered: 0,
@@ -201,7 +217,7 @@ isCOD = false;
         isOrderStartedPreparingByRestaurant: 0,
         orderAppliedCoupon: rzorder.couponAppliedOnCart,
         orderChannel: 'AirCloudPos',
-        orderDeliveryAddress: this.data.getAddress(),
+        orderDeliveryAddress: this.address,
         orderDiscountTotal: rzorder.cartDiscountTotal,
         orderGrandTotal: rzorder.cartGrandTotal,
         orderInvoiceId: 0,
@@ -211,9 +227,12 @@ isCOD = false;
         orderTotalCgst: rzorder.cartTotalCgstPercentage,
         orderTotalSgst: rzorder.cartTotalSgstPercentage,
         restaurantOrderMode: 'App',
-        restaurantTenantId: rzorder.restaurantTenantId
+        restaurantTenantId: rzorder.restaurantTenantId,
+        orderAcceptedByRestaurantAt: new Date().toISOString()
       };
 
+      console.log('create Order payload:');
+      console.log(body);
       const res: any = await this.rest.addOrderToRestaurant(body);
       const newOrder: RestaurantOrderOutputPayloadList = res;
       this.data.setCartItems([]);

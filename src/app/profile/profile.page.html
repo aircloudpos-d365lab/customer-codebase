@@ -1,0 +1,115 @@
+<ion-header>
+  <ion-toolbar>
+    <ion-buttons slot="start">
+      <ion-back-button></ion-back-button>
+    </ion-buttons>
+    <ion-title>My Profile</ion-title>
+  </ion-toolbar>
+</ion-header>
+
+<ion-content>
+  <div *ngIf='response'>
+    <div class='card shadow m20 p20'>
+      <div class='hffs' style='font-size: 1.4rem;'>
+        <ion-icon name='clipboard'></ion-icon>
+        <p>Profile Details</p>
+      </div>
+      <div class='hfsb'>
+        <div class='hffs'>
+          <ion-icon name='person'></ion-icon>
+          <ion-input [disabled]='!editable.name' [(ngModel)]='response.customerName'></ion-input>
+        </div>
+        <ion-icon name='create' (click)='editable.name = true; infoChanged = true'></ion-icon>
+      </div>
+      <div class='hfsb'>
+        <div class='hffs'>
+          <ion-icon name='mail'></ion-icon>
+          <ion-input [disabled]='!editable.email' [(ngModel)]='response.customerEmail'></ion-input>
+        </div>
+        <ion-icon name='create' (click)='editable.email = true;infoChanged = true'></ion-icon>
+      </div>
+      <div class='hfsb'>
+        <div class='hffs'>
+          <ion-icon name='call'></ion-icon>
+          <ion-input [disabled]='!editable.altphone' [(ngModel)]='response.customerPrimaryContactNo'></ion-input>
+        </div>
+        <!-- <ion-icon name='create' (click)='editable.altphone = true'></ion-icon> -->
+      </div>
+      <div *ngIf='infoChanged' (click)='presentAlertConfirm()' class='shadow custom-button ion-activatable'>
+        <p>Update Info</p>
+      </div>
+    </div>
+    <div class='card shadow m20 p20'>
+      <div class='hfsb'>
+        <div class='hffs' style='font-size: 1.4rem;'>
+          <ion-icon name='pin'></ion-icon>
+          <p>Address Info</p>
+        </div>
+        <ion-icon (click)='showAddAddressCard()' style='color: var(--ion-color-primary, red);font-size: 1.4rem;margin:0' class='p10' name='add'></ion-icon>
+      </div>
+      
+      <div  *ngFor='let add of response.customerAddressList'>
+        <div class='hfsb'>
+          <div class='hffs'>
+            <ion-icon name='business'></ion-icon>
+            <p>{{add.customerAddressType}} {{(add.isDefaultAddress) ? '(Primary address)' : ''}}</p>
+          </div>
+          <ion-icon (click)='resetPrimary(add)' name='star' [style.color]='(add.isDefaultAddress)? "gold": "gray"'></ion-icon>
+        </div>
+
+        <div class='hfsb'>
+          <div class='hffs'>
+            <ion-icon name='navigate'></ion-icon>
+            <ion-input [disabled]='!editableaddress[add.customerAddressType]' [(ngModel)]='add.customerAddress'></ion-input>
+          </div>
+          <ion-icon name='create' (click)='editableaddress[add.customerAddressType] = true; addressChanged = true'></ion-icon>
+        </div>
+      </div>
+      <div (click)='saveAddressChanges()' *ngIf='addressChanged' class='custom-button shadow'>
+        <p>Save changes</p>
+      </div>
+    </div>
+    <div *ngIf='showNewAddressCard' class='card shadow m20 p20'>
+      <div class='hfsb'>
+        <p style="font-size: 1.2rem;">New Address</p>
+        <ion-icon (click)='removeNewAddress()' style='font-size: 1.4rem; color: #f44336;margin: 0;' class='p10' name='trash'></ion-icon>
+      </div>
+      <ion-item>
+        <ion-label position='floating'>Address Type<span style="color: red;">*</span></ion-label>
+        <ion-input [(ngModel)]='addressType'></ion-input>
+      </ion-item>
+      <ion-item>
+        <ion-label position='floating'>Line 1<span style="color: red;">*</span></ion-label>
+        <ion-input [(ngModel)]='line1'></ion-input>
+      </ion-item>
+
+      <ion-item>
+        <ion-label position='floating'>Line 2</ion-label>
+        <ion-input [(ngModel)]='line2'></ion-input>
+      </ion-item>
+
+      <ion-item>
+        <ion-label position='floating'>City<span style="color: red;">*</span></ion-label>
+        <ion-input [(ngModel)]='city'></ion-input>
+      </ion-item>
+
+      <ion-item>
+        <ion-label position='floating'>PIN code<span style="color: red;">*</span></ion-label>
+        <ion-input type='number' [(ngModel)]='pin'></ion-input>
+      </ion-item>
+      <div (click)='uploadNewAddress()' class='address-button'>
+        <div class='hfc'>
+          <p>Add to list</p>
+          <ion-icon name='add'></ion-icon>
+        </div>
+      </div>
+    </div>
+
+  </div>
+  <div *ngIf='!response'>
+    <div class='hfc m20 p20 card shadow'>
+      <p>Fetching profile information</p>
+      <ion-spinner class='m10'></ion-spinner>
+    </div>
+  </div>
+</ion-content>

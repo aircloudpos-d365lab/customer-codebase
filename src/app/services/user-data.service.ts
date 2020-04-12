@@ -1,6 +1,6 @@
 import { Injectable } from '@angular/core';
 import { MenuList } from '../models/RestaurantDetails';
-import { LoginResponse, InfoAddBody } from '../models/AuthModels';
+import { LoginResponse, InfoAddBody, CustomerAddress, CustomerDetails } from '../models/AuthModels';
 
 @Injectable({
   providedIn: 'root'
@@ -8,29 +8,27 @@ import { LoginResponse, InfoAddBody } from '../models/AuthModels';
 export class UserDataService {
 items: MenuList[];
 RID = 'RgVLcOjwZkG';
-outletIndex = '1';
+outletIndex = '2';
 outletId;
   constructor() {
     this.outletId = this.RID + '_' + this.outletIndex;
     // call some api and fetch relevant data and keep them here
   }
 
-  setUser(user: InfoAddBody) {
+  setUser(user: CustomerDetails) {
     user.restaurantTenantId = this.outletId;
     localStorage.setItem('user', JSON.stringify(user));
   }
 
-  getUser(): InfoAddBody {
+  getUser(): CustomerDetails {
     return JSON.parse(localStorage.getItem('user'));
   }
 
+  setTenantId(id) {
+    localStorage.setItem('customerTenantId', id);
+  }
   getTenantId(): string {
-    const user = this.getUser();
-    if (user.customerTenantId) {
-      return user.customerTenantId;
-    }
-    // alert('using a fake TenantId, please fix the auth');
-    return '0000000000';
+    return localStorage.getItem('customerTenantId');
   }
 
   getSelectedBranchId(): string {
@@ -47,20 +45,33 @@ outletId;
     return 'Special 27';
   }
 
-  setAddress(add) {
-    const data = this.getUser();
-    data.customerAddress = add;
-    this.setUser(data);
+  // setAddress(add) {
+  //   const data = this.getUser();
+  //   data.customerAddress = add;
+  //   this.setUser(data);
+  // }
+  getAddressList(): CustomerAddress[] {
+    const user = this.getUser();
+    if (user) {
+      return user.customerAddressList;
+    }
+    return [];
   }
-  getAddress(): string {
-    return this.getUser().customerAddress;
+
+  setRestaurantPhoneNumber(phone) {
+    localStorage.setItem('restaurantPhone', phone);
+  }
+
+  getRestaurantPhoneNumber(): string {
+    return localStorage.getItem('restaurantPhone');
   }
 
   getRestaurantId(): string {
     return this.RID;
   }
   getToken(): string {
-    return localStorage.getItem('pushToken');
+    const token = localStorage.getItem('pushToken');
+    return (token) ? token : 'hello';
   }
 
   logout() {

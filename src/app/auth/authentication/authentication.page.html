@@ -2,15 +2,15 @@
   <div style='position: absolute;height: 100%;width: 100%;'>
     <img src="assets/bg.jpg" style='width: 100%;height: 100%;object-fit: cover;'>
   </div>
-  <div style='position: absolute;height: 100%;width: 100%;background: #232C5177;'></div>
+  <div style='position: absolute;height: 100%;width: 100%;background: #232C51CC;'></div>
   <ion-grid style="height: 100%">
     <ion-row color="primary" justify-content-center align-items-center style="height: 100%">
       <ion-col align-self-center size-md="6" size-lg="5" size-xs="12">
         <div text-center>
-          <h1 style="color: white;font-size: 3rem">{{(state == 1)?"Sign up":"Log in"}}</h1>
+          <h1 style="color: white;font-size: 3rem">{{head[state]}}</h1>
         </div>
 
-        <div padding>
+        <div *ngIf='state == 1 || state == 0' padding>
           <div style="background-color: #ffffff77;border-radius: 6px;">
             <ion-item color='tsbg'>
               <ion-label position='floating'>phone<span style="color: red;">*</span></ion-label>
@@ -25,33 +25,29 @@
                   <ion-label position='floating'>repeat password<span style="color: red;">*</span></ion-label>
                 <ion-input [(ngModel)]='repass' type='password'></ion-input>
               </ion-item>
-              <ion-item color='tsbg'>
-                <ion-label position='floating'>enter your name<span style="color: red;">*</span></ion-label>
-                <ion-input [(ngModel)]='name'></ion-input>
-              </ion-item>
               <!-- <ion-item>
                 <ion-label position='floating'>enter alternative phone no. (optional)<span style="color: red;">*</span></ion-label>
                 <ion-input type='phone' [(ngModel)]='altphone'></ion-input>
               </ion-item> -->
               
-              <ion-item color='tsbg'>
+              <!-- <ion-item color='tsbg'>
                 <ion-label position='floating'>enter address<span style="color: red;">*</span></ion-label>
                 <ion-input [(ngModel)]='address'></ion-input>
-              </ion-item>
+              </ion-item> -->
               
               <ion-item color='tsbg'>
                 <ion-label position='floating'>email<span style="color: red;">*</span></ion-label>
                 <ion-input type='email' [(ngModel)]='email'></ion-input>
               </ion-item>
             </div>
-
-        </div>
-        <div (click)="forgotPassword()" *ngIf='state == 0' style='display: flex; flex-flow: row;justify-content: flex-end;align-items: center'>
-          <p style='color: white;'>forgot password?</p>
-        </div>
+          </div>
+          
+          <div (click)="forgotPassword()" *ngIf='state == 0' style='display: flex; flex-flow: row;justify-content: flex-end;align-items: center'>
+            <p style='color: white;'>forgot password?</p>
+          </div>
           <div text-center>
             <br>
-            <ion-button style='width: 100%;' (click)='signupOrLogin()'>{{(state == 1)?"Sign up":"Log in"}}
+            <ion-button style='width: 100%;' (click)='signupOrLogin()'>{{buttonTextMap[state]}}
             </ion-button>
           </div>
           <div text-center>
@@ -76,6 +72,38 @@
               </ion-row>
             </ion-grid>
           </div> -->
+        </div>
+        <div *ngIf='state == 2'>
+          <p style='color: white; font-size: 1.4rem;text-align: center;'>We need to know your default address for delivery</p>
+          <div style="background-color: #ffffff77;border-radius: 6px;">
+            <ion-item color='tsbg'>
+              <ion-label position='floating'>enter your name<span style="color: red;">*</span></ion-label>
+              <ion-input [(ngModel)]='name'></ion-input>
+            </ion-item>
+            <p style='margin-left: 10px;color: black;'>Default address</p>
+            <ion-item color='tsbg'>
+              <ion-label position='floating'>Line 1<span style="color: red;">*</span></ion-label>
+              <ion-input [(ngModel)]='line1'></ion-input>
+            </ion-item>
+
+            <ion-item color='tsbg'>
+              <ion-label position='floating'>Line 2</ion-label>
+              <ion-input [(ngModel)]='line2'></ion-input>
+            </ion-item>
+
+            <ion-item color='tsbg'>
+              <ion-label position='floating'>City<span style="color: red;">*</span></ion-label>
+              <ion-input [(ngModel)]='city'></ion-input>
+            </ion-item>
+
+            <ion-item color='tsbg'>
+              <ion-label position='floating'>PIN code<span style="color: red;">*</span></ion-label>
+              <ion-input type='number' [(ngModel)]='pin'></ion-input>
+            </ion-item>
+          </div>
+          <div (click)='signupOrLogin()' style="overflow: auto;margin-top: 20px;background: #1E88E5;color: white;text-align: center;" class='card shadow'>
+            <p style="color: white;margin: 10px;">Go Inside</p>
+          </div>
         </div>
       </ion-col>
 

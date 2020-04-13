@@ -156,7 +156,7 @@
     </ion-fab-list>
   </ion-fab>
   <ion-fab (click)="goToCart()" *ngIf='price>0' style='margin-bottom: 80px' vertical="bottom" horizontal="end" slot="fixed">
-    <!-- <div class='counter-badge hfc shadow'>{{counterBadge}}</div> -->
+    <div style='background: #1E88E5' class='counter-badge hfc shadow'>{{badgeCount}}</div>
     <ion-fab-button color='success' style='z-index: 1'>
       <ion-icon name="cart"></ion-icon>
     </ion-fab-button>

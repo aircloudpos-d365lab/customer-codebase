@@ -60,7 +60,7 @@
         <div class='hfsb'>
           <div class='hffs'>
             <ion-icon name='navigate'></ion-icon>
-            <ion-input [disabled]='!editableaddress[add.customerAddressType]' [(ngModel)]='add.customerAddress'></ion-input>
+            <ion-textarea [disabled]='!editableaddress[add.customerAddressType]' [(ngModel)]='add.customerAddress'></ion-textarea>
           </div>
           <ion-icon name='create' (click)='editableaddress[add.customerAddressType] = true; addressChanged = true'></ion-icon>
         </div>

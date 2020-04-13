@@ -32,6 +32,7 @@ random = '';
 errordisplay = false;
 errormessage = '';
 loadingmenu = false;
+badgeCount = 0;
   constructor(public data: UserDataService,
               private navCtrl: NavController,
               private restServ: RestDataService,
@@ -126,6 +127,7 @@ loadingmenu = false;
         });
       }
     });
+    this.updateBadge();
     console.log('cart cleared');
   }
 
@@ -274,8 +276,25 @@ loadingmenu = false;
     }
     item.count += count;
     this.price += item.restaurantMenu.restaurantMenuPrice * count;
+    this.updateBadge();
   }
 
+  updateBadge() {
+    this.badgeCount = 0;
+    if (!this.originalCategories) {
+      return;
+    }
+
+    this.originalCategories.forEach(element => {
+      if (this.displayMenu[element]) {
+        this.displayMenu[element].forEach(items => {
+          if (items.count > 0) {
+            this.badgeCount++;
+          }
+        });
+      }
+    });
+  }
 
   ionViewWillEnter() {
     this.selectedItems = this.data.getCartItems();
@@ -302,6 +321,7 @@ loadingmenu = false;
         this.price += element.count * element.restaurantMenu.restaurantMenuPrice;
       });
     }
+    this.updateBadge();
   }
 
   goToCart() {

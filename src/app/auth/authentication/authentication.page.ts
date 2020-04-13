@@ -192,7 +192,7 @@ export class AuthenticationPage implements OnInit {
         loader.dismiss();
         console.log(response);
         this.getDataForUser(this.phone);
-        this.navCtrl.navigateForward('home');
+        this.navCtrl.navigateRoot('home');
       } catch (err) {
         console.log('error occured');
         console.log(err);

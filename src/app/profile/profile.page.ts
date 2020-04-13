@@ -42,7 +42,7 @@ addressType;
   async inflateForm() {
     try {
       this.response = await this.rest.getDataForUser();
-
+      this.response.customerPrimaryContactNo = this.response.customerTenantId;
       console.log(this.response);
     } catch (err) {
       console.log(err);
@@ -153,10 +153,10 @@ addressType;
     const body: CustomerAddress = {
       customerTenantId: this.response.customerTenantId,
       customerName: this.response.customerName,
-      customerContactNumber: this.response.customerPrimaryContactNo,
+      customerContactNumber: this.response.customerTenantId,
       customerAddressType: this.addressType,
       customerAddress: address,
-      restaurantTenantId: this.response.restaurantTenantId,
+      restaurantTenantId: this.response.customerAddressList[0].restaurantTenantId,
       isDefaultAddress: 0
     };
 
@@ -167,6 +167,7 @@ addressType;
       const res = await this.rest.addAddressData(body);
     } catch (err) {
       console.log(err);
+      this.presentAlert('Failed to add address', () => {});
     } finally {
       loading.dismiss();
       this.ngOnInit();

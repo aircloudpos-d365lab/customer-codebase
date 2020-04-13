@@ -7,14 +7,21 @@ import { LoginResponse, InfoAddBody, CustomerAddress, CustomerDetails } from '..
 })
 export class UserDataService {
 items: MenuList[];
-RID = 'RgVLcOjwZkG';
-outletIndex = '2';
-outletId;
+private RID = 'RgVLcOjwZkG';
+private outletIndex = '1';
+private outletId;
   constructor() {
     this.outletId = this.RID + '_' + this.outletIndex;
     // call some api and fetch relevant data and keep them here
   }
 
+  getMasterRestaurantId(): string {
+    return this.RID;
+  }
+
+  getOutletId(): string {
+    return this.outletId;
+  }
   setUser(user: CustomerDetails) {
     user.restaurantTenantId = this.outletId;
     localStorage.setItem('user', JSON.stringify(user));

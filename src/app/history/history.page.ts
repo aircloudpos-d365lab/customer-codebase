@@ -37,13 +37,20 @@ shouldRefreshData: boolean = true;
   }
 
   async refreshPage(event) {
-    console.log('calling refresh');
+
+    // console.log('calling refresh');
     try {
       await this.getActiveOrderStatus();
-      await this.getCompletedOrders();
     } catch (err) {
       console.log('err');
       this.createAlert('Failed to refresh page data, please try again');
+    }
+    
+    try {
+      await this.getCompletedOrders();
+    } catch (err) {
+      console.log('err');
+      // this.createAlert('Failed to refresh page data, please try again');
     } finally {
       if (event) {
         event.target.complete();
@@ -77,11 +84,11 @@ shouldRefreshData: boolean = true;
         element.meta = {
           progress: 0,
           stepCompleted: 0,
-          acceptedAt: 'Order not accepted yet',
-          preparedAt: 'Order not prepared yet',
-          preparingAt: 'Order did not start preparing yet',
-          outForDeliveryAt: 'Order not out for delivery yet',
-          deliveredAt: 'Order not delivered yet'
+          acceptedAt: 'Accepted',
+          preparedAt: 'Food ready',
+          preparingAt: 'In process',
+          outForDeliveryAt: 'Out for delivery',
+          deliveredAt: 'Delivered'
         };
         if (ro.isOrderAcceptedByRestaurant) {
           progress++;
@@ -121,7 +128,7 @@ shouldRefreshData: boolean = true;
           }
         }, 30000);
       }
-      console.log(this.combinedData.active);
+      // console.log(this.combinedData.active);
 
     }).catch(err => {
       this.errormessage.active = 'Failed to load active orders, please try again';
@@ -144,6 +151,7 @@ shouldRefreshData: boolean = true;
 
       response.restaurantOrderOutputPayloadList = response.restaurantOrderOutputPayloadList.reverse();
       response.restaurantOrderOutputPayloadList.forEach(element => {
+        console.log(element);
         element.formattedList = this.getFormattedOrders(element.orderMenuList);
       });
       this.combinedData.completed = response.restaurantOrderOutputPayloadList;
@@ -168,8 +176,11 @@ shouldRefreshData: boolean = true;
   // }
 
   getFormattedOrders(menuList) {
+    if (!menuList) {
+      return '';
+    }
     let res = '';
-    console.log(menuList);
+    // console.log(menuList);
     menuList.forEach(element => {
       res += '<p>' + element.cartRestaurantMenuQty + ' X ' + element.cartRestaurantMenuName + '</p>';
     });
@@ -205,7 +216,7 @@ shouldRefreshData: boolean = true;
   }
 
   ionViewDidLeave() {
-    console.log('goodbye moonmen');
+    // console.log('goodbye moonmen');
     this.shouldRefreshData = false;
   }
   orderSegmentChanged(event) {
@@ -306,7 +317,7 @@ shouldRefreshData: boolean = true;
   async setPaymentStatus(orderId, status) {
     try {
       const res = await this.restServ.setPaymentOrderStatus(orderId, status);
-      console.log(res);
+      // console.log(res);
     } catch (err) {
       this.createAlert('Payment status could not be updated,'
       + 'please take a screenshot of this message and talk to restaurant if inconvenience occurs.'

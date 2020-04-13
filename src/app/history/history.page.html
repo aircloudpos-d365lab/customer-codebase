@@ -92,7 +92,7 @@
             <div class='hbar'></div>
             <div class='items'>
               <p class='head'>ITEMS</p>
-              <p class='details'>{{(h.formattedList)}}</p>
+              <div class='details' [innerHTML]='h.formattedList'></div>
             </div>
             <div class='items'>
               <p class='head'>ORDERED ON</p>

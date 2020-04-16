@@ -212,9 +212,9 @@ addressList: CustomerAddress[];
         isOrderCancelledByRestaurant: 0,
         isOrderDelivered: 0,
         isOrderOutForDelivery: 0,
-        isOrderPaymentConfirmed: 0,
+        isOrderPaymentConfirmed: 1,
         isOrderPreparedByRestaurant: 0,
-        isOrderStartedPreparingByRestaurant: 0,
+        isOrderStartedPreparingByRestaurant: 1,
         orderAppliedCoupon: rzorder.couponAppliedOnCart,
         orderChannel: 'AirCloudPos',
         orderDeliveryAddress: this.address,
@@ -228,7 +228,9 @@ addressList: CustomerAddress[];
         orderTotalSgst: rzorder.cartTotalSgstPercentage,
         restaurantOrderMode: 'App',
         restaurantTenantId: rzorder.restaurantTenantId,
-        orderAcceptedByRestaurantAt: new Date().toISOString()
+        orderAcceptedByRestaurantAt: new Date().toISOString(),
+        orderStartedPreparingByRestaurantAt: new Date().toISOString(),
+        orderPaymentConfirmedAt: new Date().toISOString()
       };
 
       console.log('create Order payload:');

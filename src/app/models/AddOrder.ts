@@ -23,4 +23,6 @@ isOrderCancelledByRestaurant: number;
 isOrderCancelledByCustomer: number;
 isOrderStartedPreparingByRestaurant: number;
 orderAcceptedByRestaurantAt?: string;
+orderStartedPreparingByRestaurantAt?: string,
+orderPaymentConfirmedAt?: string;
 }

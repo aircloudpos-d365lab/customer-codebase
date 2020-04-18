@@ -77,8 +77,11 @@ export class AuthenticationPage implements OnInit {
       const loader = await this.createLoading('Loading, please wait...');
       try {
         loader.present();
+        console.log('calling the login here');
         // const resp: any = await this.rest.login(this.phone, this.password);
         this.rest.login(this.phone, this.password).subscribe(async res => {
+          console.log('inside login response');
+          console.log(res);
           if (res.status === 204) {
             loader.dismiss();
             alert('Wrong credentials provided!');
@@ -99,6 +102,7 @@ export class AuthenticationPage implements OnInit {
           }
         });
       } catch (err) {
+        console.log('some other error occured');
         await loader.dismiss();
         console.log(err);
       }
@@ -178,7 +182,8 @@ export class AuthenticationPage implements OnInit {
           deviceToken: this.data.getToken(),
           loggedInAttemptViaApp: 1,
           loggedInAttemptViaBrowser: 0,
-          loggedInViaOauth: 0
+          loggedInViaOauth: 0,
+          restaurantTenantId: this.data.getSelectedBranchId()
         };
 
         // alert(JSON.stringify(infoData));

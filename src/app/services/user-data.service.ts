@@ -8,7 +8,7 @@ import { LoginResponse, InfoAddBody, CustomerAddress, CustomerDetails } from '..
 export class UserDataService {
 items: MenuList[];
 private RID = 'RgVLcOjwZkG';
-private outletIndex = '1';
+private outletIndex = '2';
 private outletId;
   constructor() {
     this.outletId = this.RID + '_' + this.outletIndex;

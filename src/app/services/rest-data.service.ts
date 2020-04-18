@@ -178,8 +178,8 @@ BASEURL = 'http://3.6.179.142';
   getRestaurantDetails() {
     return this.http.get(
       this.getBaseUrl(8082)
-      + 'restaurant-details/?restaurant_tenant_id='
-      + this.RID);
+      + 'restaurant-details/'
+      + this.formatQParams({restaurant_tenant_id: this.RID}));
   }
 
   login(phone, pass): Observable<HttpResponse<Config>> {
@@ -192,11 +192,13 @@ BASEURL = 'http://3.6.179.142';
       deviceToken: this.data.getToken(),
       loggedInAttemptViaApp: 1,
       loggedInAttemptViaBrowser: 0,
-      loggedInViaOauth: 0
+      loggedInViaOauth: 0,
+      restaurantTenantId: this.data.getSelectedBranchId()
     };
     return this.http.post<Config>(
       this.getBaseUrl(8082)
-      + 'customer-login/verify',
+      + 'customer-login/verify'
+      + this.formatQParams({restaurant_tenant_id: this.RID}),
       req,
       {
         observe: 'response'
@@ -213,13 +215,15 @@ BASEURL = 'http://3.6.179.142';
       deviceToken: this.data.getToken(),
       loggedInAttemptViaApp: 1,
       loggedInAttemptViaBrowser: 0,
-      loggedInViaOauth: 0
+      loggedInViaOauth: 0,
+      restaurantTenantId: this.data.getSelectedBranchId()
     };
     console.log('calling reset with this body');
     console.log(body);
     return this.http.post(
       this.getBaseUrl(8082)
-      + 'customer-login/reset',
+      + 'customer-login/reset'
+      + this.formatQParams({restaurant_tenant_id: this.RID}),
       body,
       {
         responseType: 'text'
@@ -243,7 +247,8 @@ BASEURL = 'http://3.6.179.142';
   addLoginData(data: LoginBody) {
     return this.http.post(
       this.getBaseUrl(8082)
-      + 'customer-login/add',
+      + 'customer-login/add'
+      + this.formatQParams({restaurant_tenant_id: this.RID}),
       data
     ).toPromise();
   }
@@ -251,7 +256,8 @@ BASEURL = 'http://3.6.179.142';
   addExtraData(data: InfoAddBody) {
     return this.http.post(
       this.getBaseUrl(8082)
-      + 'customer-info/add',
+      + 'customer-info/add'
+      + this.formatQParams({restaurant_tenant_id: this.RID}),
       data
     ).toPromise();
   }
@@ -259,7 +265,8 @@ BASEURL = 'http://3.6.179.142';
   updateExtraData(data: InfoAddBody) {
     return this.http.post(
       this.getBaseUrl(8082)
-      + 'customer-info/update',
+      + 'customer-info/update'
+      + this.formatQParams({restaurant_tenant_id: this.RID}),
       data,
       {
         responseType: 'text'
@@ -270,7 +277,8 @@ BASEURL = 'http://3.6.179.142';
   addAddressData(data: CustomerAddress) {
     return this.http.post(
       this.getBaseUrl(8082)
-      + 'customer-address/add',
+      + 'customer-address/add'
+      + this.formatQParams({restaurant_tenant_id: this.RID}),
       data,
       {
         responseType: 'text'

@@ -40,6 +40,7 @@ export interface LoginBody {
     browserToken: string;
     loggedInAttemptViaBrowser: 0 | 1;
     loggedInAttemptViaApp: 0 | 1;
+    restaurantTenantId: string;
 }
 
 export interface LoginResponse {
